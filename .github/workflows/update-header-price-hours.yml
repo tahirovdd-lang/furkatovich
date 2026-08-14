@@ -1,0 +1,71 @@
+name: Update header price and hours
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-header-price-hours.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Update index.html
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+
+          # Header phones: force second number onto its own line.
+          text = text.replace(
+              '<div class="brand-phone" id="brandPhone">+998 (95) 560-88-81<br>+998 (93) 999-59-99</div>',
+              '<div class="brand-phone" id="brandPhone"><span>+998 (95) 560-88-81</span><span>+998 (93) 999-59-99</span></div>'
+          )
+          text = text.replace(
+              '    .brand-phone{\n      font-weight:900;\n      font-size:12.8px;\n      letter-spacing:.3px;\n      opacity:.95;\n    }',
+              '    .brand-phone{\n      font-weight:900;\n      font-size:12.8px;\n      letter-spacing:.3px;\n      opacity:.95;\n      display:flex;\n      flex-direction:column;\n      align-items:center;\n      gap:2px;\n      line-height:1.15;\n    }\n    .brand-phone span{display:block;white-space:nowrap;}'
+          )
+
+          # Product prices only: dark blue.
+          text = text.replace(
+              '.price{font-weight:900;color:var(--tile);margin-top:8px;}',
+              '.price{font-weight:900;color:#123B6D;margin-top:8px;}'
+          )
+
+          # Working hours everywhere in the visible about section and descriptions.
+          text = text.replace('11:00–00:00', '09:00–22:00')
+          text = text.replace('11:00-00:00', '09:00-22:00')
+
+          required = [
+              '<span>+998 (95) 560-88-81</span><span>+998 (93) 999-59-99</span>',
+              'color:#123B6D',
+              '09:00–22:00'
+          ]
+          if not all(x in text for x in required):
+              raise SystemExit('Required updates were not applied')
+
+          p.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update header phones, product price color and hours"
+            git push origin main
+          fi
