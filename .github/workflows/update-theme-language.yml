@@ -1,0 +1,131 @@
+name: Update FURKATOVICH theme and Tajik language
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-theme-language.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Update index.html
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+
+          # Light-blue palette. Keep the existing design and logic unchanged.
+          replacements = {
+              '--tile:#6D1020;': '--tile:#55C2E6;',
+              '--tile-2:#430916;': '--tile-2:#2FA7D3;',
+              '--tile-3:#8E1B30;': '--tile-3:#82D7EF;',
+              'rgba(109,16,32,.06)': 'rgba(85,194,230,.10)',
+              'rgba(109,16,32,.78)': 'rgba(85,194,230,.78)',
+              'rgba(109,16,32,.12)': 'rgba(85,194,230,.16)',
+              "Telegram.WebApp.setHeaderColor?.('#6D1020')": "Telegram.WebApp.setHeaderColor?.('#55C2E6')",
+          }
+          for old, new in replacements.items():
+              text = text.replace(old, new)
+
+          # IT button -> TJ button.
+          text = text.replace(
+              '<button class="btn" id="langIT" onclick="setLang(\'it\',this)"><span class="lang-flag">🇮🇹</span>IT</button>',
+              '<button class="btn" id="langTJ" onclick="setLang(\'tj\',this)"><span class="lang-flag">🇹🇯</span>TJ</button>'
+          )
+
+          # Full Tajik UI translation.
+          ui_tj = "  tj:{brandSub:'Mazali Taomlar',menu:'Меню',aboutTitle:'Дар бораи тарабхона',aboutSub:'Тамос, соати корӣ, суроға',aboutAddr:'📍 Суроға / Назарҳо',aboutPhone:'📞 Телефон',aboutHours:'🕒 Соати корӣ',callTitle:'Занг задан',instaSub:'Instagram-ро кушодан',searchResults:'Натиҷаҳои ҷустуҷӯ',cart:'🛒 Сабад',total:'Ҳамагӣ',order:'Фармоиш додан',comment:'✍️ Шарҳ (масалан: ошёна/нишона/вақт)',sum:'сум',empty:'Сабад холӣ аст',welcome:'👋 Хуш омадед',metaPrefix:'Порсия / Ҳаҷм',price:'Нарх',nothing:'Ҳеҷ чиз ёфт нашуд',mapsBtn:'📍 Кушодани ҷойгиршавӣ ва назарҳо (Yandex Maps)',managerTitle:'Тамос бо менеҷер',managerSub:'+998 (95) 560-88-81',legalTitle:'Барои шахсони ҳуқуқӣ',legalSub:`${LEGAL_PHONE_HUMAN}`,kitchen:'Меню',bar:'Нӯшокиҳо',subcatsTitle:'Категорияҳо',subcatsHint:'Зеркатегорияро интихоб кунед',deliveryTitle:'Тарзи гирифтани фармоиш',delivery:'🚚 Расонидан',pickup:'🏃 Худбарорӣ',phonePH:'📞 Рақами телефон',addrPH:'📍 Суроғаи расонидан',payTitle:'Тарзи пардохт',cash:'💵 Нақдӣ',click:'🟢 Click',online:'💳 Online',payClickTitle:'Пардохт бо Click',payQrHint:'Барои пардохт QR-кодро скан кунед',onlineDetails:`Қабулкунанда: ${ONLINE_PAY.receiver}\\nРақами корт: ${ONLINE_PAY.card}`,reqPhone:'Рақами телефонро ворид кунед',reqAddr:'Суроғаи расониданро ворид кунед',waiterSheetTitle:'Пешхизматро даъват кардан',inRest:'Меҳмон дар тарабхона',table:'Мизро интихоб кунед',call:'🛎️ Даъват кардан',waiterNote:'Мо дархостро бо рақами миз мефиристем.',reqTable:'Мизро интихоб кунед'}"
+          text = re.sub(r"  it:\{brandSub:'Mazali Taomlar'.*?\}\n", ui_tj + '\n', text, count=1)
+
+          category_replacements = {
+              "sides:{ru:'Гарниры',uz:'Garnirlar',en:'Sides',it:'Contorni'}": "sides:{ru:'Гарниры',uz:'Garnirlar',en:'Sides',tj:'Гарнирҳо'}",
+              "breakfast:{ru:'Завтрак',uz:'Nonushta',en:'Breakfast',it:'Colazione'}": "breakfast:{ru:'Завтрак',uz:'Nonushta',en:'Breakfast',tj:'Наҳорӣ'}",
+              "pasta:{ru:'Паста',uz:'Pasta',en:'Pasta',it:'Pasta'}": "pasta:{ru:'Паста',uz:'Pasta',en:'Pasta',tj:'Паста'}",
+              "pizza:{ru:'Пицца',uz:'Pitsa',en:'Pizza',it:'Pizza'}": "pizza:{ru:'Пицца',uz:'Pitsa',en:'Pizza',tj:'Питса'}",
+              "ravioli:{ru:'Равиоли',uz:'Ravioli',en:'Ravioli',it:'Ravioli'}": "ravioli:{ru:'Равиоли',uz:'Ravioli',en:'Ravioli',tj:'Равиоли'}",
+              "salads:{ru:'Салаты',uz:'Salatlar',en:'Salads',it:'Insalate'}": "salads:{ru:'Салаты',uz:'Salatlar',en:'Salads',tj:'Хӯришҳо'}",
+              "soups:{ru:'Супы',uz:'Sho‘rvalar',en:'Soups',it:'Zuppe'}": "soups:{ru:'Супы',uz:'Sho‘rvalar',en:'Soups',tj:'Шӯрбоҳо'}",
+              "cold_drinks:{ru:'Холодные напитки',uz:'Sovuq ichimliklar',en:'Cold drinks',it:'Bevande fredde'}": "cold_drinks:{ru:'Холодные напитки',uz:'Sovuq ichimliklar',en:'Cold drinks',tj:'Нӯшокиҳои хунук'}",
+          }
+          for old, new in category_replacements.items():
+              text = text.replace(old, new)
+
+          item_translations = {
+              'Patate rustiche':'Картошкаи деҳотӣ', 'Patatine fritte':'Картошка фри',
+              'Colazione inglese':'Наҳории англисӣ', 'Colazione Villaggio':'Наҳории Villaggio',
+              'Crêpes con confettura d’arancia':'Крепҳо бо конфитюри афлесун',
+              'Crêpes con confettura ai frutti di bosco':'Крепҳо бо конфитюри буттамева',
+              'Porridge d’avena ai frutti di bosco':'Каша аз овёс бо буттамева',
+              'Colazione francese':'Наҳории фаронсавӣ', 'Lasagna':'Лазаня', 'Pasta di mare':'Паста Ди маре',
+              'Fettuccine Alfredo':'Фетучини Алфредо', 'Fettuccine Bolognese':'Фетучини Болонезе',
+              'Fettuccine Carbonara con vitello':'Фетучини Карбонара бо гӯшти гӯсола',
+              'Pizza Bolognese':'Питса Болонезе', 'Pizza Villaggio':'Питса Villaggio',
+              'Pizza Carbonara':'Питса Карбонара', 'Pizza Margherita':'Питса Маргарита',
+              'Pizza mortadella con stracciatella':'Питса бо мортаделла ва страчателла',
+              'Pizza Pepperoni':'Питса Пепперони', 'Pizza pesto con mozzarella':'Питса песто бо моцарелла',
+              'Pizza pollo funghi':'Питса бо мурғ ва занбурӯғ', 'Pizza primavera':'Питса Примавера',
+              'Pizza quattro formaggi':'Питса Чор панир',
+              'Pizza con salmone leggermente salato':'Питса бо лососи камнамак', 'Pizza Caesar':'Питса Сезар',
+              'Ravioli con pollo e champignon':'Равиоли бо мурғ ва шампиньон',
+              'Ravioli al salmone':'Равиоли бо лосос', 'Ravioli con vitello':'Равиоли бо гӯшти гӯсола',
+              'Ravioli con spinaci e ricotta':'Равиоли бо исфаноҷ ва рикотта',
+              'Insalata di mare':'Хӯриши Ди маре', 'Insalata caprese':'Хӯриши Капрезе',
+              'Insalata nizzarda con tonno':'Хӯриши Нисуаз бо тунец',
+              'Insalata Caesar con pollo':'Хӯриши Сезар бо мурғ', 'Insalata burrata':'Хӯриши Буррата',
+              'Insalata greca':'Хӯриши юнонӣ', 'Insalata di melanzane croccanti':'Хӯриши бодинҷони қирмиз',
+              'Insalata Caesar con gamberi':'Хӯриши Сезар бо майгу', 'Zuppa stracciatella':'Шӯрбои страчателла',
+              'Melograno-arancia':'Анор-афлесун', 'Lampone-frutto della passione':'Малина-маракуйя',
+              'Mojito':'Мохито', 'Agrumi-crespino':'Ситрус-барбарис', 'Mela-kiwi':'Себ-киви',
+          }
+          for old, new in item_translations.items():
+              text = text.replace("it:'" + old + "'", "tj:'" + new + "'")
+
+          text = text.replace("{ru:name,uz:name,en:name,it:name}", "{ru:name,uz:name,en:name,tj:name}")
+          text = text.replace('names.it', 'names.tj').replace('catNames.it', 'catNames.tj').replace('UI.it', 'UI.tj')
+          text = text.replace(
+              "it:`Categoria: ${catNames.tj||catKey}\\n${UI.tj.metaPrefix}: ${metaText||'—'}\\n\\nAggiungi al carrello e premi “${UI.tj.order}”.`",
+              "tj:`Категория: ${catNames.tj||catKey}\\n${UI.tj.metaPrefix}: ${metaText||'—'}\\n\\nБа сабад илова кунед ва “${UI.tj.order}”-ро пахш кунед.`"
+          )
+          text = text.replace("it:names.tj||names.en||names.ru||names.uz||id", "tj:names.tj||names.en||names.ru||names.uz||id")
+          text = text.replace('it.n?.it', 'it.n?.tj').replace('?.it,', '?.tj,')
+
+          old_about = "(lang==='it')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Come ordinare:</b><br>1) Scegli una categoria<br>2) Aggiungi al carrello<br>3) Scegli consegna/ritiro e pagamento<br>4) Premi “${UI[lang].order}”<br><br><b>Orari:</b> 11:00–00:00<br><b>Indirizzo:</b> Samarcanda, via Gagarin, 188<br><span class=\"muted\">*I prezzi sono in UZS.</span>`"
+          new_about = "(lang==='tj')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Чӣ тавр фармоиш додан:</b><br>1) Категорияро интихоб кунед<br>2) Маҳсулотро ба сабад илова кунед<br>3) Расонидан/худбарорӣ ва тарзи пардохтро интихоб кунед<br>4) “${UI[lang].order}”-ро пахш кунед<br><br><b>Соати корӣ:</b> 11:00–00:00<br><b>Суроға:</b> ш. Самарқанд, кӯчаи Гагарин, 188<br><span class=\"muted\">*Нархҳо бо сӯм нишон дода шудаанд.</span>`"
+          text = text.replace(old_about, new_about)
+
+          # Guardrails: do not commit a broken/partial conversion.
+          required = ["setLang('tj'", '🇹🇯', '--tile:#55C2E6;', "tj:{brandSub:'Mazali Taomlar'", "lang==='tj'"]
+          forbidden = ["setLang('it'", '🇮🇹', '--tile:#6D1020;', '--tile-2:#430916;', '--tile-3:#8E1B30;']
+          if not all(x in text for x in required):
+              raise SystemExit('Required Tajik/light-blue markers are missing')
+          if any(x in text for x in forbidden):
+              raise SystemExit('Old Italian/red markers still remain')
+
+          p.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Use Tajik language and light-blue theme"
+            git push origin main
+          fi
