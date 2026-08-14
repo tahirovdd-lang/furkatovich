@@ -1,0 +1,26 @@
+name: Increase header phone size
+on:
+  push:
+    paths:
+      - '.github/workflows/increase-header-phone-size.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Increase phone font size
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('font-size:12.8px;','font-size:14.5px;',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html
+          git diff --cached --quiet || git commit -m "Increase header phone font size"
+          git push
