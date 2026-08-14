@@ -107,7 +107,8 @@
       line-height:1.15;
     }
     .brand-phone span{display:block !important;width:100%;white-space:nowrap;}
-    .brand-phone .phone-second{margin-top:3px;}
+    .brand-phone .phone-first,.brand-phone .phone-second{display:block !important;width:100%;white-space:nowrap;text-align:center;}
+    .brand-phone .phone-second{margin-top:4px;}
 
     .welcome{
       margin-top:6px;
@@ -1014,7 +1015,7 @@ function nameOf(id){const it=ITEM_INDEX[id];return(it&&it.n&&(it.n[lang]||it.n.r
 function renderWelcome(){const el=document.getElementById('welcomeLine');if(!el)return;const name=(tg_first_name||tg_username||'').trim();if(!name){el.style.display='none';return;}el.style.display='block';el.innerText=`${UI[lang].welcome}, ${name}!`;}
 function applyUI(){
   document.getElementById('brandSub').innerText=UI[lang].brandSub;
-  document.getElementById('brandPhone').innerText=PHONE_HUMAN;
+  document.getElementById('brandPhone').innerHTML='<div class="phone-first">+998 (95) 560-88-81</div><div class="phone-second">+998 (93) 999-59-99</div>';
   menuTitle.innerText=UI[lang].menu;mAboutTitle.innerText=UI[lang].aboutTitle;mAboutSub.innerText=UI[lang].aboutSub;aboutAddrLabel.innerText=UI[lang].aboutAddr;aboutPhoneLabel.innerText=UI[lang].aboutPhone;aboutHoursLabel.innerText=UI[lang].aboutHours;mCallTitle.innerText=UI[lang].callTitle;mCallSub.innerText=PHONE_HUMAN;mInstaTitle.innerText='@furkatovich.uz';mInstaSub.innerText=UI[lang].instaSub;
   const mMgrT=document.getElementById('mManagerTitle'),mMgrS=document.getElementById('mManagerSub');if(mMgrT)mMgrT.innerText=UI[lang].managerTitle;if(mMgrS)mMgrS.innerText=UI[lang].managerSub;
   const mLegT=document.getElementById('mLegalTitle'),mLegS=document.getElementById('mLegalSub');if(mLegT)mLegT.innerText=UI[lang].legalTitle;if(mLegS)mLegS.innerText=UI[lang].legalSub;
