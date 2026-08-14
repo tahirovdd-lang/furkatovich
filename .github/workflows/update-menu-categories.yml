@@ -1,58 +1,41 @@
-name: Update FURKATOVICH menu categories
-on:
-  push:
-    paths:
-      - '.github/workflows/update-menu-categories.yml'
+name: Update menu categories
+on: [push]
 permissions:
   contents: write
 jobs:
   update:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Replace category structure
+      - name: Update categories
+        shell: bash
         run: |
-          python3 - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          start=s.index('const CATEGORY_LABELS = {')
-          end=s.index('\nlet mainGroup=', start)
-          block="""const CATEGORY_LABELS = {
-  sides:{ru:'Гарниры',uz:'Garnirlar',en:'Sides',tj:'Гарнирҳо'},
-  salads:{ru:'Салаты',uz:'Salatlar',en:'Salads',tj:'Хӯришҳо'},
-  soups:{ru:'Супы',uz:'Sho‘rvalar',en:'Soups',tj:'Шӯрбоҳо'},
-  hot_dishes:{ru:'Горячие блюда',uz:'Issiq taomlar',en:'Hot dishes',tj:'Таомҳои гарм'},
-  plov:{ru:'Плов',uz:'Osh',en:'Plov',tj:'Оши палав'},
-  bistro:{ru:'Бистро',uz:'Bistro',en:'Bistro',tj:'Бистро'},
-  sets:{ru:'Сеты',uz:'Setlar',en:'Sets',tj:'Сетҳо'},
-  hot_dog:{ru:'Хот-Дог',uz:'Hot-Dog',en:'Hot Dog',tj:'Хот-Дог'},
-  cold_drinks:{ru:'Холодные напитки',uz:'Sovuq ichimliklar',en:'Cold drinks',tj:'Нӯшокиҳои хунук'},
-  hot_drinks:{ru:'Горячие напитки',uz:'Issiq ichimliklar',en:'Hot drinks',tj:'Нӯшокиҳои гарм'},
-  desserts:{ru:'Десерты',uz:'Desertlar',en:'Desserts',tj:'Шириниҳо'}
-};
-const GROUPS={menu:['sides','salads','soups','hot_dishes','plov','bistro','sets','hot_dog','cold_drinks','hot_drinks','desserts']};"""
-          s=s[:start]+block+s[end:]
-          # Keep existing dishes only in requested retained categories; add empty arrays for new categories.
-          menu_start=s.index('const MENU = {')
-          menu_end=s.index('\n};\n\nconst ITEM_INDEX', menu_start)+3
-          old=s[menu_start:menu_end]
-          import re
-          def extract(key):
-              m=re.search(r'\n  '+re.escape(key)+r':\[(.*?)(?=\n  [a-zA-Z_]+:\[|\n\};)', old, re.S)
-              return m.group(1).rstrip(',') if m else ''
-          vals={k:extract(k) for k in ['sides','salads','soups','cold_drinks']}
-          new="const MENU = {\n"
-          order=['sides','salads','soups','hot_dishes','plov','bistro','sets','hot_dog','cold_drinks','hot_drinks','desserts']
-          for i,k in enumerate(order):
-              body=vals.get(k,'')
-              new+=f"  {k}:[{body}]" + ("," if i<len(order)-1 else "") + "\n"
-          new+='};'
-          s=s[:menu_start]+new+s[menu_end:]
-          p.write_text(s,encoding='utf-8')
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          a = s.index('const CATEGORY_LABELS = {')
+          b = s.index('\nlet mainGroup=', a)
+          block = '''const CATEGORY_LABELS = {
+            sides:{ru:'Гарниры',uz:'Garnirlar',en:'Sides',tj:'Гарнирҳо'},
+            salads:{ru:'Салаты',uz:'Salatlar',en:'Salads',tj:'Хӯришҳо'},
+            soups:{ru:'Супы',uz:'Sho‘rvalar',en:'Soups',tj:'Шӯрбоҳо'},
+            hot_dishes:{ru:'Горячие блюда',uz:'Issiq taomlar',en:'Hot dishes',tj:'Таомҳои гарм'},
+            plov:{ru:'Плов',uz:'Osh',en:'Plov',tj:'Оши палав'},
+            bistro:{ru:'Бистро',uz:'Bistro',en:'Bistro',tj:'Бистро'},
+            sets:{ru:'Сеты',uz:'Setlar',en:'Sets',tj:'Сетҳо'},
+            hot_dog:{ru:'Хот-Дог',uz:'Hot-Dog',en:'Hot Dog',tj:'Хот-Дог'},
+            cold_drinks:{ru:'Холодные напитки',uz:'Sovuq ichimliklar',en:'Cold drinks',tj:'Нӯшокиҳои хунук'},
+            hot_drinks:{ru:'Горячие напитки',uz:'Issiq ichimliklar',en:'Hot drinks',tj:'Нӯшокиҳои гарм'},
+            desserts:{ru:'Десерты',uz:'Desertlar',en:'Desserts',tj:'Шириниҳо'}
+          };
+          const GROUPS={menu:['sides','salads','soups','hot_dishes','plov','bistro','sets','hot_dog','cold_drinks','hot_drinks','desserts']};'''
+          s = s[:a] + block + s[b:]
+          p.write_text(s, encoding='utf-8')
           PY
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add index.html
-          git diff --cached --quiet || git commit -m "Keep requested categories and add new FURKATOVICH categories"
+          git commit -m 'Apply requested menu categories' || exit 0
           git push
