@@ -1,0 +1,35 @@
+name: Fix FURKATOVICH header phone rendering
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-header-phone-render.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keep two phone rows after applyUI
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          old="document.getElementById('brandPhone').innerText=PHONE_HUMAN;"
+          new="document.getElementById('brandPhone').innerHTML='<div class=\"phone-first\">+998 (95) 560-88-81</div><div class=\"phone-second\">+998 (93) 999-59-99</div>';"
+          if old not in s:
+              raise SystemExit('brandPhone applyUI assignment not found')
+          s=s.replace(old,new,1)
+          # Make the vertical layout explicit for div children as well.
+          marker='.brand-phone .phone-second{margin-top:3px;}'
+          replacement='.brand-phone .phone-first,.brand-phone .phone-second{display:block !important;width:100%;white-space:nowrap;text-align:center;}\n    .brand-phone .phone-second{margin-top:4px;}'
+          if marker in s:
+              s=s.replace(marker,replacement,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html
+          git diff --cached --quiet || git commit -m "Keep header phones on separate lines after language UI refresh"
+          git push
