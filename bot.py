@@ -20,7 +20,7 @@ if not BOT_TOKEN:
 ADMIN_ID = int(os.getenv("ADMIN_ID", "6013591658"))
 WEBAPP_URL = os.getenv(
     "WEBAPP_URL",
-    "https://tahirovdd-lang.github.io/furkatovich/?v=1"
+    "https://tahirovdd-lang.github.io/furkatovich/?v=2"
 )
 
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
