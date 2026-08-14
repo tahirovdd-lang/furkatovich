@@ -1,0 +1,60 @@
+name: Darken FURKATOVICH blue theme
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/darken-blue-theme.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Darken blue palette only
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+
+          replacements = {
+              '--tile:#55C2E6;': '--tile:#3A8DCC;',
+              '--tile-2:#2FA7D3;': '--tile-2:#246EA8;',
+              '--tile-3:#82D7EF;': '--tile-3:#66B6E3;',
+              'rgba(85,194,230,.10)': 'rgba(58,141,204,.10)',
+              'rgba(85,194,230,.78)': 'rgba(58,141,204,.78)',
+              'rgba(85,194,230,.16)': 'rgba(58,141,204,.16)',
+              "Telegram.WebApp.setHeaderColor?.('#55C2E6')": "Telegram.WebApp.setHeaderColor?.('#3A8DCC')",
+          }
+
+          for old, new in replacements.items():
+              text = text.replace(old, new)
+
+          required = ['--tile:#3A8DCC;', '--tile-2:#246EA8;', '--tile-3:#66B6E3;']
+          if not all(x in text for x in required):
+              raise SystemExit('New blue palette markers are missing')
+
+          p.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Darken blue theme"
+            git push origin main
+          fi
