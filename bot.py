@@ -18,10 +18,15 @@ if not BOT_TOKEN:
 
 # ====== НАСТРОЙКИ FURKATOVICH ======
 ADMIN_ID = int(os.getenv("ADMIN_ID", "6013591658"))
-WEBAPP_URL = os.getenv(
+
+# Берём URL из Bothost, но принудительно убираем старый ?v=...
+# и ставим свежую версию, чтобы Telegram не открывал закэшированный WebApp.
+_webapp_env = os.getenv(
     "WEBAPP_URL",
-    "https://tahirovdd-lang.github.io/furkatovich/?v=2"
+    "https://tahirovdd-lang.github.io/furkatovich/"
 )
+WEBAPP_BASE_URL = _webapp_env.split("?", 1)[0].rstrip("/") + "/"
+WEBAPP_URL = f"{WEBAPP_BASE_URL}?v=20260814-4"
 
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 dp = Dispatcher()
@@ -183,7 +188,7 @@ async def fallback(message: types.Message):
     await send_welcome(message)
 
 async def main():
-    logging.info("🚀 FURKATOVICH bot started")
+    logging.info("🚀 FURKATOVICH bot started with WebApp URL: %s", WEBAPP_URL)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
