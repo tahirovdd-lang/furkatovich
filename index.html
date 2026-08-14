@@ -1,16 +1,1057 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>FURKATOVICH — Mazali Taomlar</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>body{font-family:Arial,sans-serif;margin:0;background:#fff;color:#10233e}.header{padding:24px 16px;text-align:center;background:linear-gradient(180deg,#0b2746,#061629);color:#fff}.header img{width:130px;max-width:40vw}.header h1{margin:10px 0 2px;font-size:26px}.header p{margin:0;color:#d4a640;font-weight:700}.contacts{font-size:13px;margin-top:8px}.page{max-width:640px;margin:auto;padding:16px}.links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.btn{display:block;padding:12px;border-radius:14px;text-align:center;text-decoration:none;background:#0b2746;color:white;font-weight:700}.title{font-size:22px;font-weight:800;margin:12px 0}.card{display:flex;justify-content:space-between;gap:12px;padding:14px 4px;border-bottom:1px solid #e5e5e5}.name{font-weight:700}.price{font-weight:800;color:#9b7119;white-space:nowrap}.address{margin:16px 0;padding:14px;border-radius:14px;background:#f5f6f8;font-size:14px;line-height:1.4}</style>
-</head><body>
-<div class="header"><img src="images/logo.png" alt="FURKATOVICH logo"><h1>FURKATOVICH</h1><p>Mazali Taomlar</p><div class="contacts">+998 (95) 560-88-81<br>+998 (93) 999-59-99</div></div>
-<div class="page"><div class="links"><a class="btn" href="https://yandex.uz/maps/org/furkatovich/30094575789/">📍 Яндекс Карты</a><a class="btn" href="https://www.instagram.com/furkatovich.uz">📷 Instagram</a></div><div class="address"><b>Адрес:</b> г. Самарканд, ул. Гагарина 188</div><div class="title">Салаты</div><div id="menu"></div></div>
+  <meta charset="UTF-8">
+  <title>FURKATOVICH — Mazali Taomlar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --tile:#6D1020;
+      --tile-2:#430916;
+      --tile-3:#8E1B30;
+
+      --white:#ffffff;
+      --text:#ffffff;
+      --text-dark:#1E1B16;
+
+      --muted: rgba(255,255,255,.78);
+      --stroke: rgba(255,255,255,.18);
+      --shadow: rgba(0,0,0,.22);
+
+      --r-lg:24px;
+      --r-md:22px;
+
+      --vh: 1vh;
+      --sticky-h: 86px;
+      --accent: var(--tile);
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:'Montserrat',sans-serif;
+      background:var(--bg);
+      color:var(--text-dark);
+      min-height: calc(var(--vh) * 100);
+      overflow-y:auto;
+      overflow-x:hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: none;
+      padding-bottom: calc(var(--sticky-h) + 16px);
+      -webkit-text-size-adjust:100%;
+    }
+    .page{max-width:560px;margin:0 auto;}
+
+    .header{
+      padding:22px 12px 36px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+        linear-gradient(180deg, var(--tile), var(--tile-2));
+      border-bottom:1px solid rgba(255,255,255,.14);
+      box-shadow:0 12px 26px rgba(0,0,0,.24);
+      display:flex;align-items:center;justify-content:center;
+      position:relative;text-align:center;
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    .header:before{
+      content:"";
+      position:absolute;inset:-40px;
+      background:
+        radial-gradient(circle at 18% 30%, rgba(255,255,255,.10) 0 2px, rgba(255,255,255,0) 3px),
+        radial-gradient(circle at 60% 18%, rgba(255,255,255,.08) 0 2px, rgba(255,255,255,0) 3px),
+        radial-gradient(circle at 82% 56%, rgba(255,255,255,.06) 0 2px, rgba(255,255,255,0) 3px);
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    .header img{
+      position:absolute;left:12px;
+      width:88px;height:88px;object-fit:contain;
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      padding:8px;
+      border:1px solid rgba(255,255,255,.20);
+      box-shadow:0 14px 30px rgba(0,0,0,.22);
+      z-index:2;
+    }
+
+    .brand-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;transform: translateX(16px);z-index:2;}
+    .brand-title{
+      font-family:"Georgia","Times New Roman",Times,serif;
+      font-size:30px;line-height:1;letter-spacing:.5px;font-weight:800;
+    }
+    .brand-title2{
+      font-family:'Montserrat',sans-serif;
+      font-weight:900;
+      font-size:14px;
+      letter-spacing:1.6px;
+      line-height:1.15;
+      opacity:.95;
+    }
+    .brand-phone{
+      font-weight:900;
+      font-size:12.8px;
+      letter-spacing:.3px;
+      opacity:.95;
+    }
+
+    .welcome{
+      margin-top:6px;
+      font-weight:900;
+      font-size:13px;
+      opacity:.92;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.10);
+      color:#fff;
+    }
+
+    .header-actions{
+      position:absolute;right:10px;top:0;bottom:0;
+      display:flex;flex-direction:column;justify-content:center;align-items:flex-end;
+      gap:10px;
+      z-index:90;
+    }
+
+    .act-btn{
+      width:34px;height:34px;border-radius:13px;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;user-select:none;
+      background: linear-gradient(180deg, var(--tile-3), var(--tile-2));
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.10), 0 10px 20px rgba(0,0,0,.18);
+      transition:.15s;
+    }
+    .act-btn:active{transform:scale(.97);}
+
+    .burger{width:17px;height:11px;position:relative;}
+    .burger span{position:absolute;left:0;right:0;height:2.3px;border-radius:10px;background:#ffffff;opacity:.92;}
+    .burger span:nth-child(1){top:0;}
+    .burger span:nth-child(2){top:4.2px;}
+    .burger span:nth-child(3){bottom:0;}
+
+    .act-ico{font-size:15px;line-height:1;color:#fff;}
+
+    .langs{
+      display:flex;
+      gap:10px;
+      padding:12px;
+      justify-content:center;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .btn{
+      padding:12px 18px;
+      border-radius:28px;
+      font-weight:900;
+      min-width:112px;
+      text-align:center;
+      cursor:pointer;
+      transition:.15s;
+      border:1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, var(--tile-3), var(--tile-2));
+      color:#ffffff;
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+      flex:0 0 auto;
+    }
+    .btn:active{transform:scale(.98);}
+    .btn.active{
+      background:#ffffff;
+      color:#1d1d1d;
+      border:1px solid rgba(0,0,0,.10);
+      box-shadow: 0 14px 26px rgba(0,0,0,.22);
+    }
+
+    .cat-btn{
+      padding:12px 16px;
+      min-width:132px;
+      font-size:14px;
+      border-radius:18px;
+    }
+
+    .langs .btn{
+      min-width:92px;
+      padding:10px 12px;
+      border-radius:22px;
+      font-size:13.5px;
+    }
+    .lang-flag{margin-right:8px; font-size:16px; line-height:1;}
+
+    .categories{
+      display:flex;
+      gap:12px;
+      padding:14px;
+      justify-content:flex-start;
+      overflow-x:auto;
+      scroll-padding-left:14px;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior-x:contain;
+    }
+
+    .products{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:12px;}
+    .card{
+      border-radius:24px;padding:12px;text-align:center;
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 12px 26px rgba(0,0,0,.18);
+      transition:.15s;
+      color:#1d1d1d;
+    }
+    .img{height:170px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
+    .img img{max-width:150px;max-height:150px;object-fit:cover;transform:scale(1.06);cursor:pointer;border-radius:18px;}
+    .item-name{margin-top:2px;padding:0 6px;font-weight:900;line-height:1.15;min-height:42px;display:flex;align-items:center;justify-content:center;word-break:break-word;}
+    .item-meta{margin-top:6px;font-weight:800;font-size:12px;opacity:.82;line-height:1.15;min-height:16px;}
+    .price{font-weight:900;color:var(--tile);margin-top:8px;}
+    .price small{font-weight:800;opacity:.75;margin-left:4px;}
+    .counter{display:flex;justify-content:center;gap:10px;margin-top:8px;align-items:center;}
+    .counter button{
+      width:32px;height:32px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.28);
+      background: linear-gradient(180deg, var(--tile-3), var(--tile-2));
+      color:#fff;font-size:18px;font-weight:900;box-shadow:0 12px 24px rgba(0,0,0,.18);
+      transition:.15s;
+    }
+    .counter button:active{transform:scale(.96);}
+
+    .cart-items{
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .cart-item{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(0,0,0,.08);
+      background:rgba(109,16,32,.06);
+    }
+    .cart-item-name{font-weight:900;line-height:1.2;}
+    .cart-item-meta{font-size:12px;font-weight:800;opacity:.75;margin-top:3px;}
+    .cart-item-sum{font-weight:900;color:var(--tile);white-space:nowrap;text-align:right;}
+    .cart-empty{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      background:rgba(0,0,0,.03);
+      border:1px solid rgba(0,0,0,.08);
+      font-weight:900;
+      opacity:.75;
+      text-align:center;
+    }
+
+    .cart{
+      background:rgba(255,255,255,.94);
+      color:#1d1d1d;
+      margin:12px;padding:16px;border-radius:24px;border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 12px 26px rgba(0,0,0,.18);
+    }
+    .input{
+      margin:8px auto;display:block;padding:14px;width:85%;
+      border-radius:22px;font-size:15px;border:1px solid rgba(0,0,0,.10);
+      background:rgba(255,255,255,.94);
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+      outline:none;transition:.15s;
+      color:#2b2b2b;
+    }
+    textarea.input{height:90px;}
+    .order-btn{
+      width:100%;
+      padding:18px;
+      margin-top:14px;
+      border-radius:24px;
+      cursor:pointer;
+      color:#ffffff;
+      font-size:17px;
+      font-weight:900;
+      border:1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, var(--tile), var(--tile-2));
+      box-shadow: 0 14px 26px rgba(0,0,0,.22);
+      position:relative;
+      z-index:2;
+      scroll-margin-bottom: calc(var(--sticky-h) + 24px);
+    }
+    #cartBox{
+      scroll-margin-bottom: calc(var(--sticky-h) + 24px);
+      padding-bottom: calc(16px + var(--sticky-h));
+    }
+
+    .row-buttons{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .row-buttons .btn{
+      min-width:150px;
+    }
+    .row-title{
+      font-weight:900;
+      margin-top:12px;
+      text-align:center;
+    }
+
+    .row-buttons.payment-row{
+      flex-wrap:nowrap;
+    }
+    .row-buttons.payment-row .btn{
+      min-width:0;
+      flex:1 1 0;
+      padding-left:10px;
+      padding-right:10px;
+    }
+
+    .popup{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s;}
+    .popup.show{opacity:1;pointer-events:auto;}
+    .popup-box{
+      background:white;padding:26px;border-radius:24px;text-align:center;font-weight:800;border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 14px 26px rgba(0,0,0,.22);
+      color:#1d1d1d;
+    }
+
+    .img-modal{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.62);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition:.18s;
+      z-index:2000;
+      padding:18px;
+    }
+    .img-modal.show{opacity:1;pointer-events:auto;}
+    .img-modal-box{
+      width:min(760px, 100%);
+      border-radius:22px;
+      overflow:hidden;
+      background:#fff;
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:0 18px 44px rgba(0,0,0,.28);
+    }
+    .img-modal-top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:12px 12px;
+      background:rgba(0,0,0,.04);
+    }
+    .img-modal-title{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .img-modal-close{
+      width:38px;height:38px;border:none;border-radius:14px;background:transparent;cursor:pointer;
+      font-size:22px;line-height:1;color:#666;
+    }
+    .img-modal-content{
+      display:flex;
+      flex-direction:column;
+      gap:0;
+      align-items:stretch;
+    }
+    .img-modal-left{
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      border-bottom:1px solid rgba(0,0,0,.08);
+    }
+    .img-modal-img{
+      width:100%;
+      max-height:66vh;
+      object-fit:contain;
+      background:#fff;
+      display:block;
+      border-radius:18px;
+    }
+    .img-modal-right{
+      padding:14px 14px 16px;
+      color:#1d1d1d;
+    }
+    .img-desc-title{
+      font-weight:900;
+      font-size:16px;
+      line-height:1.15;
+      margin-bottom:10px;
+    }
+    .img-desc-meta{
+      font-weight:900;
+      color:var(--tile);
+      margin-bottom:10px;
+      white-space:pre-line;
+    }
+    .img-desc-text{
+      font-weight:800;
+      opacity:.9;
+      line-height:1.28;
+      white-space:pre-line;
+    }
+    .img-desc-chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0;}
+    .chip{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.10);
+      background:rgba(0,0,0,.03);
+      font-weight:900;
+      font-size:12px;
+    }
+
+    .subcats-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      padding:8px 2px 2px;
+    }
+    .subcat-square{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:14px 12px;
+      font-weight:900;
+      text-align:center;
+      cursor:pointer;
+      background: linear-gradient(180deg, var(--tile-3), var(--tile-2));
+      color:#fff;
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+      transition:.15s;
+    }
+    .subcat-square:active{transform:scale(.98);}
+    .subcat-square.active{
+      background:#ffffff;
+      color:#1d1d1d;
+      border:1px solid rgba(0,0,0,.10);
+      box-shadow: 0 14px 26px rgba(0,0,0,.22);
+    }
+
+    .sticky-checkout{
+      position:fixed;left:0;right:0;bottom:0;
+      padding:10px 12px;
+      background: rgba(109,16,32,.78);
+      backdrop-filter: blur(10px);
+      z-index:999;
+      border-top:1px solid rgba(255,255,255,.14);
+      height: var(--sticky-h);
+      display:flex;
+      align-items:center;
+    }
+    .sticky-inner{
+      max-width:520px;margin:0 auto;border-radius:18px;padding:10px 12px;
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 14px 26px rgba(0,0,0,.22);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      width:100%;
+      color:#1d1d1d;
+    }
+    .sticky-sum{font-weight:900;line-height:1.1;}
+    .sticky-sum small{display:block;font-weight:800;opacity:.75;margin-top:2px;}
+    .sticky-btn{
+      padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, var(--tile), var(--tile-2));
+      color:#ffffff;font-weight:900;cursor:pointer;
+      box-shadow: 0 14px 26px rgba(0,0,0,.22);
+    }
+
+    .sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.38);opacity:0;pointer-events:none;transition:.18s;z-index:1000;}
+    .sheet-backdrop.show{opacity:1;pointer-events:auto;}
+    .sheet{
+      position:fixed;left:0; right:0;bottom:-100%;
+      background:rgba(255,255,255,.94);
+      color:#1d1d1d;
+      border-top-left-radius:22px;border-top-right-radius:22px;border:1px solid rgba(255,255,255,.22);
+      box-shadow:0 18px 40px rgba(0,0,0,.22);
+      transition:.22s;z-index:1010;padding:10px 12px 14px;
+      max-height: 86vh;overflow:auto;-webkit-overflow-scrolling:touch;
+    }
+    .sheet.show{bottom:0;}
+    .sheet-handle{width:44px;height:5px;border-radius:999px;background:rgba(0,0,0,.18);margin:6px auto 10px;}
+    .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px;}
+    .sheet-head b{font-size:16px;}
+    .sheet-close{width:38px;height:38px;border:none;border-radius:12px;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#777;}
+
+    .menu-list{display:flex;flex-direction:column;gap:8px;}
+    .menu-item{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px 12px;border-radius:16px;border:1px solid rgba(0,0,0,.08);
+      background:rgba(0,0,0,.03);
+      cursor:pointer;text-decoration:none;color:#1d1d1d;
+    }
+    .menu-left{display:flex;align-items:center;gap:10px;min-width:0;}
+    .menu-ic{
+      width:30px;height:30px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+      background: rgba(109,16,32,.12);
+      flex:0 0 auto;
+    }
+    .menu-txt{display:flex;flex-direction:column;min-width:0;}
+    .menu-name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .menu-sub{font-size:12px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+    .menu-right{opacity:.65;font-weight:900;}
+
+    .about-desc{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,.08);
+      background:#fff;
+      color:#1d1d1d;
+      line-height:1.28;
+      font-weight:800;
+    }
+    .about-desc b{font-weight:900;}
+    .about-desc .muted{opacity:.85;font-weight:800;}
+
+    .search-title{display:none;width:100%;padding:10px 14px 0;font-weight:900;color:#fff;}
+    .search-title.show{display:block;}
+    .search-wrap{display:none;position:relative;padding:10px 12px 6px;gap:10px;align-items:center;}
+    .search-wrap.show{display:flex;}
+    .search-wrap .input{width:100%;margin:0;}
+    .search-clear{
+      position:absolute;right:20px;top:50%;transform:translateY(-50%);
+      width:32px;height:32px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.06);
+      border:1px solid rgba(0,0,0,.08);
+      cursor:pointer;color:#333;font-weight:900;
+    }
+
+    .pay-details{
+      margin-top:10px;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid rgba(0,0,0,.08);
+      background:rgba(0,0,0,.03);
+      font-weight:900;
+      white-space:pre-line;
+    }
+
+    @media (max-width:420px){
+      .brand-title{font-size:28px;}
+      .brand-title2{font-size:13px;}
+      .brand-wrap{transform: translateX(10px);}
+      .header{padding:20px 10px 34px;}
+      .input{width:92%;}
+      .products{gap:14px;}
+    }
+    @media (max-width:360px){
+      .header img{width:80px;height:80px;left:10px;}
+      .brand-title{font-size:26px;}
+      .brand-title2{font-size:12px;letter-spacing:1.3px;}
+      .btn{min-width:108px;padding:12px 16px;}
+      .cat-btn{min-width:126px;padding:12px 14px;font-size:13px;}
+      .langs .btn{min-width:86px;padding:10px 10px;font-size:13px;}
+      .welcome{font-size:12px;padding:6px 9px;}
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">
+  <img src="images/logo.png?v=50" onerror="this.onerror=null;this.src='logo.png?v=50'" alt="FURKATOVICH logo">
+
+  <div class="brand-wrap">
+    <div class="brand-title">FURKATOVICH</div>
+    <div class="brand-title2" id="brandSub">Mazali Taomlar</div>
+    <div class="brand-phone" id="brandPhone">+998 (95) 560-88-81<br>+998 (93) 999-59-99</div>
+    <div class="welcome" id="welcomeLine" style="display:none;"></div>
+  </div>
+
+  <div class="header-actions">
+    <div class="act-btn" onclick="openTopMenu()" title="Меню">
+      <div class="burger"><span></span><span></span><span></span></div>
+    </div>
+
+    <div class="act-btn" onclick="openMapsHeader(event)" title="Отзывы / Геолокация">
+      <span class="act-ico">📍</span>
+    </div>
+
+    <div class="act-btn" onclick="toggleSearch()" title="Поиск">
+      <span class="act-ico">🔍</span>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="sheet-backdrop" id="menuBackdrop" onclick="closeTopMenu()"></div>
+  <div class="sheet" id="menuSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <b id="menuTitle">Меню</b>
+      <button class="sheet-close" onclick="closeTopMenu()">×</button>
+    </div>
+
+    <div class="menu-list">
+
+      <div class="menu-item" onclick="openManager(event)" role="button">
+        <div class="menu-left">
+          <div class="menu-ic">💬</div>
+          <div class="menu-txt">
+            <div class="menu-name" id="mManagerTitle">Связаться с менеджером</div>
+            <div class="menu-sub" id="mManagerSub">@furkatovich.uz</div>
+          </div>
+        </div>
+        <div class="menu-right">›</div>
+      </div>
+
+      <div class="menu-item" onclick="toggleLegal()" role="button">
+        <div class="menu-left">
+          <div class="menu-ic">🏢</div>
+          <div class="menu-txt">
+            <div class="menu-name" id="mLegalTitle">Юр лицам</div>
+            <div class="menu-sub" id="mLegalSub">+998 (95) 560-88-81</div>
+          </div>
+        </div>
+        <div class="menu-right">›</div>
+      </div>
+
+      <div id="legalWrap" style="display:none; padding:6px 4px 10px;">
+        <div style="border:1px solid rgba(0,0,0,.08); border-radius:16px; overflow:hidden; background:rgba(0,0,0,.03); padding:12px;">
+          <div style="font-weight:900; margin-bottom:6px;" id="legalLabel">🏢 Юр лицам</div>
+
+          <div style="font-weight:900; margin-bottom:6px;">📞 Телефон</div>
+          <a href="tel:+998955608881" onclick="callLegalPhone(event)" style="text-decoration:none; font-weight:900; color:var(--tile);">
+            +998 (95) 560-88-81
+          </a>
+        </div>
+      </div>
+
+      <a class="menu-item" href="tel:+998955608881" onclick="callPhone(event)">
+        <div class="menu-left">
+          <div class="menu-ic">📞</div>
+          <div class="menu-txt">
+            <div class="menu-name" id="mCallTitle">Позвонить</div>
+            <div class="menu-sub" id="mCallSub">+998 (95) 560-88-81</div>
+          </div>
+        </div>
+        <div class="menu-right">›</div>
+      </a>
+
+      <a class="menu-item" href="#" onclick="openInstagram(event)">
+        <div class="menu-left">
+          <div class="menu-ic" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" style="display:block;">
+              <path fill="currentColor" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 4.3A5.7 5.7 0 1 1 6.3 14 5.7 5.7 0 0 1 12 8.3zm0 2A3.7 3.7 0 1 0 15.7 14 3.7 3.7 0 0 0 12 10.3zM18 6.7a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/>
+            </svg>
+          </div>
+          <div class="menu-txt">
+            <div class="menu-name" id="mInstaTitle">@furkatovich.uz</div>
+            <div class="menu-sub" id="mInstaSub">Открыть Instagram</div>
+          </div>
+        </div>
+        <div class="menu-right">›</div>
+      </a>
+
+      <div class="menu-item" onclick="toggleAbout()" role="button">
+        <div class="menu-left">
+          <div class="menu-ic">ℹ️</div>
+          <div class="menu-txt">
+            <div class="menu-name" id="mAboutTitle">О кафе</div>
+            <div class="menu-sub" id="mAboutSub">Контакты, график, адрес</div>
+          </div>
+        </div>
+        <div class="menu-right">›</div>
+      </div>
+
+      <div id="aboutWrap" style="display:none; padding:6px 4px 10px;">
+        <div style="border:1px solid rgba(0,0,0,.08); border-radius:16px; overflow:hidden; background:rgba(0,0,0,.03); padding:12px;">
+          <div style="font-weight:900; margin-bottom:6px;" id="aboutAddrLabel">📍 Адрес / Отзывы</div>
+
+          <button class="btn" style="width:100%; min-width:auto;" onclick="openMaps(event)" id="mapsBtn">
+            📍 Открыть геолокацию и отзывы (Яндекс Карты)
+          </button>
+
+          <div style="height:12px;"></div>
+
+          <div style="font-weight:900; margin-bottom:6px;" id="aboutPhoneLabel">📞 Телефон</div>
+          <a href="tel:+998955608881" onclick="callPhone(event)" style="text-decoration:none; font-weight:900; color:var(--tile);" id="aboutPhoneNum">
+            +998 (95) 560-88-81
+          </a>
+
+          <div style="height:12px;"></div>
+
+          <div style="font-weight:900; margin-bottom:6px;" id="aboutHoursLabel">🕒 График</div>
+          <div style="font-weight:900; color:#1d1d1d; opacity:.92;" id="aboutHoursText">11:00–00:00</div>
+
+          <div class="about-desc" id="aboutDescText"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet-backdrop" id="subBackdrop" onclick="closeSubcats()"></div>
+  <div class="sheet" id="subSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <b id="subTitle">Категории</b>
+      <button class="sheet-close" onclick="closeSubcats()">×</button>
+    </div>
+    <div style="padding:2px 4px 6px; font-weight:900; opacity:.85;" id="subHint">Выберите подкатегорию</div>
+    <div class="subcats-grid" id="subGrid"></div>
+  </div>
+
+  <div class="sheet-backdrop" id="payBackdrop" onclick="closePaySheet()"></div>
+  <div class="sheet" id="paySheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <b id="payTitle">Оплата Click</b>
+      <button class="sheet-close" onclick="closePaySheet()">×</button>
+    </div>
+    <div style="padding:6px 4px 10px;">
+      <div style="font-weight:900; margin-bottom:10px;" id="payQrHint">Сканируйте QR-код для оплаты</div>
+      <div style="border:1px solid rgba(0,0,0,.08); border-radius:18px; overflow:hidden; background:#fff; padding:10px; display:flex; align-items:center; justify-content:center;">
+        <img id="clickQrImg" src="" alt="Click QR" style="width:100%; max-height:56vh; object-fit:contain; border-radius:14px;">
+      </div>
+      <div class="pay-details" id="clickPayDetails"></div>
+    </div>
+  </div>
+
+  <div class="sheet-backdrop" id="waiterBackdrop" onclick="closeWaiter()"></div>
+  <div class="sheet" id="waiterSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <b id="waiterTitle">Позвать официанта</b>
+      <button class="sheet-close" onclick="closeWaiter()">×</button>
+    </div>
+
+    <div style="padding:6px 4px 10px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 10px; border-radius:16px; border:1px solid rgba(0,0,0,.08); background:rgba(0,0,0,.03);">
+        <div style="font-weight:900;" id="waiterInRestLabel">Гость в ресторане</div>
+        <label style="display:flex;align-items:center;gap:10px;font-weight:900;">
+          <input type="checkbox" id="inRestToggle" checked style="transform:scale(1.2);">
+        </label>
+      </div>
+
+      <div style="height:12px;"></div>
+
+      <div style="font-weight:900; margin-bottom:8px;" id="tableLabel">Выберите стол</div>
+      <select id="tableSelect" class="input" style="width:100%; margin:0; padding:14px; border-radius:18px;">
+        <option value="">—</option>
+      </select>
+
+      <div style="height:12px;"></div>
+
+      <button class="btn" style="width:100%; min-width:auto;" onclick="sendWaiterCall()" id="waiterBtn">
+        🛎️ Позвать
+      </button>
+
+      <div style="height:6px;"></div>
+      <div style="font-weight:800; opacity:.8; line-height:1.25;" id="waiterNote">
+        Мы отправим запрос официанту вместе с номером стола.
+      </div>
+    </div>
+  </div>
+
+  <div class="search-title" id="searchTitle">Результаты поиска</div>
+  <div class="search-wrap" id="searchWrap">
+    <input id="searchInput" class="input" placeholder="Поиск..." oninput="searchProducts()" onkeydown="onSearchKey(event)">
+    <div class="search-clear" onclick="clearSearch()" title="Очистить">✖</div>
+  </div>
+
+  <div class="langs">
+    <button class="btn" id="langRU" onclick="setLang('ru',this)"><span class="lang-flag">🇷🇺</span>RU</button>
+    <button class="btn" id="langUZ" onclick="setLang('uz',this)"><span class="lang-flag">🇺🇿</span>UZ</button>
+    <button class="btn" id="langEN" onclick="setLang('en',this)"><span class="lang-flag">🇬🇧</span>EN</button>
+    <button class="btn" id="langIT" onclick="setLang('it',this)"><span class="lang-flag">🇮🇹</span>IT</button>
+  </div>
+
+  <div class="categories" id="cats"></div>
+
+  <div class="products" id="products"></div>
+
+  <div class="cart" id="cartBox">
+    <b id="cartTitle"></b>: <span id="total">0</span> <span id="sumWord">сум</span>
+
+    <div style="margin-top:10px; font-weight:900;">
+      <span id="totalLabel">Итого</span>: <span id="grandTotal">0</span> <span id="sumWord2">сум</span>
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="row-title" id="deliveryTitle">Способ получения</div>
+    <div class="row-buttons">
+      <button class="btn" id="btnDelivery" onclick="setFulfillment('delivery', this)">🚚 Доставка</button>
+      <button class="btn" id="btnPickup" onclick="setFulfillment('pickup', this)">🏃 Самовывоз</button>
+    </div>
+
+    <input id="phoneInput" class="input" placeholder="📞 Номер телефона">
+
+    <input id="addrInput" class="input" placeholder="📍 Адрес доставки">
+
+    <textarea id="comment" class="input"></textarea>
+
+    <div class="row-title" id="payMethodTitle">Способ оплаты</div>
+
+    <div class="row-buttons payment-row">
+      <button class="btn" id="btnCash" onclick="setPayment('cash', this)">💵 Наличные</button>
+      <button class="btn" id="btnClick" onclick="setPayment('click', this)">🟢 Click</button>
+      <button class="btn" id="btnOnline" onclick="setPayment('online', this)">💳 Online</button>
+    </div>
+
+    <div id="onlineDetails" class="pay-details" style="display:none;"></div>
+
+    <button class="order-btn" id="orderBtn" onclick="sendOrder()"></button>
+    <div style="height: 12px;"></div>
+  </div>
+
+  <div class="popup" id="popup"><div class="popup-box" id="popupText">✅</div></div>
+
+  <div class="img-modal" id="imgModal" onclick="closeImgModal(event)">
+    <div class="img-modal-box" onclick="event.stopPropagation()">
+      <div class="img-modal-top">
+        <div class="img-modal-title" id="imgModalTitle">Фото</div>
+        <button class="img-modal-close" onclick="closeImgModal(event)">×</button>
+      </div>
+
+      <div class="img-modal-content">
+        <div class="img-modal-left">
+          <img class="img-modal-img" id="imgModalImg" src="" alt="">
+        </div>
+        <div class="img-modal-right">
+          <div class="img-desc-title" id="imgDescTitle"></div>
+          <div class="img-desc-meta" id="imgDescMeta"></div>
+          <div class="img-desc-text" id="imgDescText"></div>
+          <div class="img-desc-chiprow" id="imgDescChips"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-checkout" id="stickyBar">
+    <div class="sticky-inner">
+      <div class="sticky-sum">
+        <span id="stickyTotal">0</span> <small id="sumCurrency">сум</small>
+      </div>
+      <button class="sticky-btn" onclick="openCart()" id="stickyCartBtn">Корзина</button>
+    </div>
+  </div>
+
+</div>
+
 <script>
-const items=[['Свежий салат',7000],['Соленья',7000],['Чакка',7000],['Винегрет',10000],['Оливье',12000],['Чалоб',6000],['Капуста красная',7000],['Французский салат',12000],['Фунчоза',10000],['Мажнунтол',12000],['Азия',12000],['Салат Шейх',13000],['Смак',12000],['Рулетики из баклажана',10000],['Хрустящий баклажан',30000],['Салат Хэ',12000],['Греческий',15000],['Огурцы с мясом',12000],['Салат Баклажан',15000],['Салат от шефа',18000],['Русская красавица',15000],['Брокколи',12000],['Яичница под шубой',17000],['Под шубой',15000],['Чирокчи',12000],['Мясной с грибами',12000]];
-menu.innerHTML=items.map(([n,p])=>`<div class="card"><div class="name">${n}</div><div class="price">${p.toLocaleString('ru-RU')} сум</div></div>`).join('');
-try{Telegram.WebApp.ready();Telegram.WebApp.expand();}catch(e){}
-</script></body></html>
+Telegram.WebApp.ready();
+try{
+  Telegram.WebApp.expand();
+  Telegram.WebApp.disableVerticalSwipes?.();
+}catch(_){}
+
+function setVH(){
+  document.documentElement.style.setProperty('--vh', (window.innerHeight*0.01)+'px');
+}
+setVH();
+window.addEventListener('resize', setVH, {passive:true});
+window.addEventListener('orientationchange', ()=>setTimeout(setVH, 250), {passive:true});
+
+function syncStickyHeight(){
+  const el = document.getElementById('stickyBar');
+  if(!el) return;
+  const h = Math.ceil(el.getBoundingClientRect().height || 86);
+  document.documentElement.style.setProperty('--sticky-h', h + 'px');
+}
+window.addEventListener('resize', ()=>setTimeout(syncStickyHeight, 50), {passive:true});
+window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 250), {passive:true});
+
+const INSTA_URL = "https://www.instagram.com/furkatovich.uz?igsh=bjZyM2J2OXNqMW4=";
+const MAPS_URL  = "https://yandex.uz/maps/org/furkatovich/30094575789/?ll=66.944554%2C39.647269&mode=search&sctx=ZAAAAAgBEAAaKAoSCXHjFvNzvlBAETEnaJPD00NAEhIJR8Zq8%2F9SJkARd7temiJAGEAiBgABAgMEBSgKOABAqwFIAWoCdXqdAc3MzD2gAQCoAQC9AXCDIpzCAQqtkZuOcPOrvIQ2ggIU0YTRgGA0LrQsNGC0L7QstC40YeKAgCSAgCaAgxkZXNrdG9wLW1hcHM%3D&sll=66.944554%2C39.647269&sspn=0.020842%2C0.018203&text=%D1%84%D1%83%D1%80%D0%BA%D0%B0%D1%82%D0%BE%D0%B2%D0%B8%D1%87&z=15.38";
+const PHONE_RAW = "+998955608881";
+const PHONE_HUMAN = "+998 (95) 560-88-81 / +998 (93) 999-59-99";
+
+const LEGAL_EMAIL = "";
+const LEGAL_PHONE_RAW = "+998939995999";
+const LEGAL_PHONE_HUMAN = "+998 (93) 999-59-99";
+
+const MANAGER_ID = 0;
+const MANAGER_USERNAME = "";
+
+const CLICK_QR_IMG = "images/CLICK_QR.jpg";
+
+const IMAGE_VERSION = "50";
+
+const PHOTO_FILES = {
+  side_kartofel_derevenskiy_200: "side_kartofel_derevenskiy_200.jpg",
+  side_kartofel_fri_200: "side_kartofel_fri_200.jpg",
+  breakfast_english_360: "breakfast_english_360.jpg",
+  breakfast_villaggio_350: "breakfast_villaggio_350.jpg",
+  crepes_orange_confit_250: "crepes_orange_confit_250.jpg",
+  crepes_berry_confit_250: "crepes_berry_confit_250.jpg",
+  porridge_oat_berry_250: "porridge_oat_berry_250.jpg",
+  breakfast_french_250: "breakfast_french_250.jpg",
+  pasta_lasagna_320: "pasta_lasagna_320.jpg",
+  pasta_di_mare_360: "pasta_di_mare_360.jpg",
+  pasta_fettuccine_alfredo_350: "pasta_fettuccine_alfredo_350.jpg",
+  pasta_fettuccine_bolognese_350: "pasta_fettuccine_bolognese_350.jpg",
+  pasta_fettuccine_carbonara_veal_350: "pasta_fettuccine_carbonara_veal_350.jpg",
+  pasta_fettuccine_carbona_ra_veal_350: "pasta_fettuccine_carbona_ra_veal_350.jpg",
+  pizza_bolognese_420: "pizza_bolognese_420.jpg",
+  pizza_villaggio_420: "pizza_villaggio_420.jpg",
+  pizza_carbona_ra_420: "pizza_carbona_ra_420.jpg",
+  pizza_carbonara_420: "pizza_carbona_ra_420.jpg",
+  pizza_margherita_420: "pizza_margherita_420.jpg",
+  pizza_mortadella_stracciatella_420: "pizza_mortadella_stracciatella_420.jpg",
+  pizza_pepperoni_420: "pizza_pepperoni_420.jpg",
+  pizza_pesto_mozzarella_420: "pizza_pesto_mozzarella_420.jpg",
+  pizza_polo_fungi_420: "pizza_polo_fungi_420.jpg",
+  pizza_primavera_420: "pizza_primavera_420.jpg",
+  pizza_primavere_420: "pizza_primavera_420.jpg",
+  pizza_quattro_formaggi_420: "pizza_quattro_formaggi_420.jpg",
+  pizza_four_cheese_420: "pizza_quattro_formaggi_420.jpg",
+  pizza_salmon_600: "pizza_salmon_600.jpg",
+  pizza_light_salted_salmon_600: "pizza_salmon_600.jpg",
+  pizza_caesar_420: "pizza_caesar_420.jpg",
+  ravioli_chicken_mushrooms_350: "ravioli_chicken_mushrooms_350.jpg",
+  ravioli_chicken_mushroom_350: "ravioli_chicken_mushroom_350.jpg",
+  ravioli_salmon_350: "ravioli_salmon_350.jpg",
+  ravioli_veal_350: "ravioli_veal_350.jpg",
+  ravioli_spinach_ricotta_350: "ravioli_spinach_ricotta_350.jpg",
+  salad_di_mare_250: "salad_di_mare_250.jpg",
+  salad_caprese_300: "salad_caprese_300.jpg",
+  salad_nicoise_tuna_250: "salad_nicoise_tuna_250.jpg",
+  salad_caesar_chicken_320: "salad_caesar_chicken_320.jpg",
+  salad_burrata_300: "salad_burrata_300.jpg",
+  salad_greek_320: "salad_greek_320.jpg",
+  salad_crispy_eggplant_300: "salad_crispy_eggplant_300.jpg",
+  salad_caesar_shrimp_250: "salad_caesar_shrimp_250.jpg",
+  soup_stracciatello_250: "soup_stracciatello_250.jpg",
+  soup_stracciatella_250: "soup_stracciatella_250.jpg",
+  drink_pomegranate_orange_450: "drink_pomegranate_orange_450.jpg",
+  drink_raspberry_passionfruit_450: "drink_raspberry_passionfruit_450.jpg",
+  drink_mojito_450: "drink_mojito_450.jpg",
+  drink_citrus_barberry_450: "drink_citrus_barberry_450.jpg",
+  drink_apple_kiwi_450: "drink_apple_kiwi_450.jpg"
+};
+
+function withVersion(path){ return `${path}?v=${IMAGE_VERSION}`; }
+function fileBaseName(file){ return String(file || '').replace(/\.(jpg|jpeg|png|webp)$/i, ''); }
+function imageCandidates(id){
+  const clean = String(id || '').replace(/^images\//,'').replace(/\.(jpg|jpeg|png|webp)$/i,'');
+  const primary = PHOTO_FILES[clean] || `${clean}.jpg`;
+  const base = fileBaseName(primary);
+  return [...new Set([`images/${primary}`,`images/${base}_tg.jpg`,`images/${base}.png`])];
+}
+function imgFallback(img, id){
+  const list = imageCandidates(id);
+  const i = Number(img.dataset.tryIndex || 0);
+  if(i < list.length){ img.dataset.tryIndex = String(i + 1); img.src = withVersion(list[i]); }
+  else{ img.onerror = null; img.src = withVersion('images/logo.png'); }
+}
+function setProductImage(img, id){ if(!img) return; img.dataset.tryIndex='0'; img.onerror=function(){imgFallback(this,id);}; imgFallback(img,id); }
+function preloadImageById(id){ const first=imageCandidates(id)[0]; if(!first)return; const im=new Image(); im.src=withVersion(first); }
+function preloadCategoryImages(catKey){ const list=MENU?.[catKey]||[]; list.forEach(it=>preloadImageById(it.id)); }
+
+const ONLINE_PAY = {
+  receiver: "Tahirov Daler",
+  card: "9860100126359502"
+};
+
+const tgUser = Telegram.WebApp.initDataUnsafe?.user || {};
+const tg_username = tgUser.username || "";
+const tg_first_name = tgUser.first_name || "";
+const tg_id = tgUser.id || "";
+
+const UI = {
+  ru:{brandSub:'Mazali Taomlar',menu:'Меню',aboutTitle:'О ресторане',aboutSub:'Контакты, график, адрес',aboutAddr:'📍 Адрес / Отзывы',aboutPhone:'📞 Телефон',aboutHours:'🕒 График',callTitle:'Позвонить',instaSub:'Открыть Instagram',searchResults:'Результаты поиска',cart:'🛒 Корзина',total:'Итого',order:'Оформить заказ',comment:'✍️ Комментарий (например: этаж/ориентир/время)',sum:'сум',empty:'Корзина пустая',welcome:'👋 Добро пожаловать',metaPrefix:'Порция / Объём',price:'Цена',nothing:'Ничего не найдено',mapsBtn:'📍 Открыть геолокацию и отзывы (Яндекс Карты)',managerTitle:'Связаться с менеджером',managerSub:'+998 (95) 560-88-81',legalTitle:'Юр лицам',legalSub:`${LEGAL_PHONE_HUMAN}`,kitchen:'Меню',bar:'Напитки',subcatsTitle:'Категории',subcatsHint:'Выберите подкатегорию',deliveryTitle:'Способ получения',delivery:'🚚 Доставка',pickup:'🏃 Самовывоз',phonePH:'📞 Номер телефона',addrPH:'📍 Адрес доставки',payTitle:'Способ оплаты',cash:'💵 Наличные',click:'🟢 Click',online:'💳 Online',payClickTitle:'Оплата Click',payQrHint:'Сканируйте QR-код для оплаты',onlineDetails:`Получатель: ${ONLINE_PAY.receiver}\nНомер карты: ${ONLINE_PAY.card}`,reqPhone:'Введите номер телефона',reqAddr:'Введите адрес доставки',waiterSheetTitle:'Позвать официанта',inRest:'Гость в ресторане',table:'Выберите стол',call:'🛎️ Позвать',waiterNote:'Мы отправим запрос официанту вместе с номером стола.',reqTable:'Выберите стол'},
+  uz:{brandSub:'Mazali Taomlar',menu:'Menyu',aboutTitle:'Restoran haqida',aboutSub:"Kontaktlar, ish vaqti, manzil",aboutAddr:'📍 Manzil / Sharhlar',aboutPhone:'📞 Telefon',aboutHours:'🕒 Ish vaqti',callTitle:"Qo'ng'iroq qilish",instaSub:"Instagramni ochish",searchResults:'Qidiruv natijalari',cart:'🛒 Savat',total:'Jami',order:'Buyurtma berish',comment:"✍️ Izoh (masalan: mo‘ljal/vaqt)",sum:"so‘m",empty:"Savat bo‘sh",welcome:'👋 Xush kelibsiz',metaPrefix:"Porsiya / Hajm",price:'Narx',nothing:"Hech narsa topilmadi",mapsBtn:"📍 Geolokatsiya va sharhlar (Yandex Maps)",managerTitle:'Menejer bilan bog‘lanish',managerSub:'+998 (95) 560-88-81',legalTitle:'Yuridik shaxslar',legalSub:`${LEGAL_PHONE_HUMAN}`,kitchen:'Menyu',bar:'Ichimliklar',subcatsTitle:'Kategoriyalar',subcatsHint:'Pastki kategoriyani tanlang',deliveryTitle:'Olish usuli',delivery:'🚚 Yetkazib berish',pickup:'🏃 Olib ketish',phonePH:'📞 Telefon raqami',addrPH:'📍 Yetkazib berish manzili',payTitle:'To‘lov usuli',cash:'💵 Naqd',click:'🟢 Click',online:'💳 Online',payClickTitle:'Click to‘lovi',payQrHint:'To‘lov uchun QR-ni skaner qiling',onlineDetails:`Qabul qiluvchi: ${ONLINE_PAY.receiver}\nKarta raqami: ${ONLINE_PAY.card}`,reqPhone:'Telefon raqamini kiriting',reqAddr:'Manzilni kiriting',waiterSheetTitle:'Ofitsiant chaqirish',inRest:'Mehmon restoranda',table:'Stolni tanlang',call:'🛎️ Chaqirish',waiterNote:'Biz so‘rovni stol raqami bilan yuboramiz.',reqTable:'Stolni tanlang'},
+  en:{brandSub:'Mazali Taomlar',menu:'Menu',aboutTitle:'About restaurant',aboutSub:'Contacts, hours, address',aboutAddr:'📍 Location / Reviews',aboutPhone:'📞 Phone',aboutHours:'🕒 Working hours',callTitle:'Call',instaSub:'Open Instagram',searchResults:'Search results',cart:'🛒 Cart',total:'Total',order:'Place order',comment:'✍️ Comment (e.g., landmark/time)',sum:'sum',empty:'Cart is empty',welcome:'👋 Welcome',metaPrefix:'Portion / Volume',price:'Price',nothing:'Nothing found',mapsBtn:'📍 Open location & reviews (Yandex Maps)',managerTitle:'Contact manager',managerSub:'+998 (95) 560-88-81',legalTitle:'For companies',legalSub:`${LEGAL_PHONE_HUMAN}`,kitchen:'Menu',bar:'Drinks',subcatsTitle:'Categories',subcatsHint:'Choose a subcategory',deliveryTitle:'Fulfillment',delivery:'🚚 Delivery',pickup:'🏃 Pickup',phonePH:'📞 Phone number',addrPH:'📍 Delivery address',payTitle:'Payment method',cash:'💵 Cash',click:'🟢 Click',online:'💳 Online',payClickTitle:'Click payment',payQrHint:'Scan QR code to pay',onlineDetails:`Receiver: ${ONLINE_PAY.receiver}\nCard number: ${ONLINE_PAY.card}`,reqPhone:'Enter phone number',reqAddr:'Enter delivery address',waiterSheetTitle:'Call waiter',inRest:'Guest in restaurant',table:'Choose table',call:'🛎️ Call',waiterNote:'We will send the request with the table number.',reqTable:'Choose table'},
+  it:{brandSub:'Mazali Taomlar',menu:'Menu',aboutTitle:'Informazioni sul ristorante',aboutSub:'Contatti, orari, indirizzo',aboutAddr:'📍 Indirizzo / Recensioni',aboutPhone:'📞 Telefono',aboutHours:'🕒 Orari di lavoro',callTitle:'Chiama',instaSub:'Apri Instagram',searchResults:'Risultati della ricerca',cart:'🛒 Carrello',total:'Totale',order:'Effettua ordine',comment:'✍️ Commento (es. piano/riferimento/orario)',sum:'sum',empty:'Il carrello è vuoto',welcome:'👋 Benvenuto',metaPrefix:'Porzione / Volume',price:'Prezzo',nothing:'Nessun risultato',mapsBtn:'📍 Apri posizione e recensioni (Yandex Maps)',managerTitle:'Contatta il manager',managerSub:'+998 (95) 560-88-81',legalTitle:'Per persone giuridiche',legalSub:`${LEGAL_PHONE_HUMAN}`,kitchen:'Menu',bar:'Bevande',subcatsTitle:'Categorie',subcatsHint:'Scegli una categoria',deliveryTitle:'Metodo di ricezione',delivery:'🚚 Consegna',pickup:'🏃 Ritiro',phonePH:'📞 Numero di telefono',addrPH:'📍 Indirizzo di consegna',payTitle:'Metodo di pagamento',cash:'💵 Contanti',click:'🟢 Click',online:'💳 Online',payClickTitle:'Pagamento Click',payQrHint:'Scansiona il QR per pagare',onlineDetails:`Destinatario: ${ONLINE_PAY.receiver}\nNumero carta: ${ONLINE_PAY.card}`,reqPhone:'Inserisci il numero di telefono',reqAddr:'Inserisci l’indirizzo di consegna',waiterSheetTitle:'Chiama il cameriere',inRest:'Ospite nel ristorante',table:'Scegli il tavolo',call:'🛎️ Chiama',waiterNote:'Invieremo la richiesta con il numero del tavolo.',reqTable:'Scegli il tavolo'}
+};
+
+let lang='ru';
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function formatSum(x){ const n=Number(x)||0; return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+
+const CATEGORY_LABELS = {
+  sides:{ru:'Гарниры',uz:'Garnirlar',en:'Sides',it:'Contorni'},
+  breakfast:{ru:'Завтрак',uz:'Nonushta',en:'Breakfast',it:'Colazione'},
+  pasta:{ru:'Паста',uz:'Pasta',en:'Pasta',it:'Pasta'},
+  pizza:{ru:'Пицца',uz:'Pitsa',en:'Pizza',it:'Pizza'},
+  ravioli:{ru:'Равиоли',uz:'Ravioli',en:'Ravioli',it:'Ravioli'},
+  salads:{ru:'Салаты',uz:'Salatlar',en:'Salads',it:'Insalate'},
+  soups:{ru:'Супы',uz:'Sho‘rvalar',en:'Soups',it:'Zuppe'},
+  cold_drinks:{ru:'Холодные напитки',uz:'Sovuq ichimliklar',en:'Cold drinks',it:'Bevande fredde'}
+};
+const GROUPS={menu:['sides','breakfast','pasta','pizza','ravioli','salads','soups','cold_drinks']};
+let mainGroup='menu'; let category=GROUPS.menu[0]; let cart={}; let fulfillment='delivery'; let paymentMethod='cash';
+
+function mkFood(id,name,meta,price,catKey){
+  const metaText=meta?String(meta):'';
+  const names=(typeof name==='object')?name:{ru:name,uz:name,en:name,it:name};
+  const catNames=CATEGORY_LABELS?.[catKey]||{};
+  return {id,p:Number(price)||0,meta:metaText,img:`images/${id}.jpg`,n:{ru:names.ru||names.en||names.it||names.uz||id,uz:names.uz||names.ru||names.en||names.it||id,en:names.en||names.ru||names.uz||names.it||id,it:names.it||names.en||names.ru||names.uz||id},desc:{ru:`Категория: ${catNames.ru||catKey}\n${UI.ru.metaPrefix}: ${metaText||'—'}\n\nДобавьте в корзину и нажмите “${UI.ru.order}”.`,uz:`Kategoriya: ${catNames.uz||catKey}\n${UI.uz.metaPrefix}: ${metaText||'—'}\n\nSavatga qo‘shing va “${UI.uz.order}” tugmasini bosing.`,en:`Category: ${catNames.en||catKey}\n${UI.en.metaPrefix}: ${metaText||'—'}\n\nAdd to cart and press “${UI.en.order}”.`,it:`Categoria: ${catNames.it||catKey}\n${UI.it.metaPrefix}: ${metaText||'—'}\n\nAggiungi al carrello e premi “${UI.it.order}”.`}};
+}
+
+const MENU = {
+  sides:[mkFood('side_kartofel_derevenskiy_200',{ru:'Картофель по деревенски',uz:'Qishloqcha kartoshka',en:'Country-style potatoes',it:'Patate rustiche'},'200 гр',25000,'sides'),mkFood('side_kartofel_fri_200',{ru:'Картофель Фри',uz:'Fri kartoshka',en:'French fries',it:'Patatine fritte'},'200 гр',25000,'sides')],
+  breakfast:[mkFood('breakfast_english_360',{ru:'Английский завтрак',uz:'Inglizcha nonushta',en:'English breakfast',it:'Colazione inglese'},'360 гр',78000,'breakfast'),mkFood('breakfast_villaggio_350',{ru:'Завтрак Villaggio',uz:'Villaggio nonushtasi',en:'Villaggio breakfast',it:'Colazione Villaggio'},'350 гр',55000,'breakfast'),mkFood('crepes_orange_confit_250',{ru:'Крипсы с апельсиновым конфитюром',uz:'Apelsin konfiturli kripslar',en:'Crepes with orange confiture',it:'Crêpes con confettura d’arancia'},'250 гр',34000,'breakfast'),mkFood('crepes_berry_confit_250',{ru:'Крипсы с ягодным конфитюром',uz:'Rezavor konfiturli kripslar',en:'Crepes with berry confiture',it:'Crêpes con confettura ai frutti di bosco'},'250 гр',34000,'breakfast'),mkFood('porridge_oat_berry_250',{ru:'Овсяная каша ягодная',uz:'Rezavorli suli bo‘tqasi',en:'Berry oatmeal porridge',it:'Porridge d’avena ai frutti di bosco'},'250 гр',37000,'breakfast'),mkFood('breakfast_french_250',{ru:'Французский завтрак',uz:'Fransuzcha nonushta',en:'French breakfast',it:'Colazione francese'},'250 гр',68000,'breakfast')],
+  pasta:[mkFood('pasta_lasagna_320',{ru:'Лазанья',uz:'Lazanya',en:'Lasagna',it:'Lasagna'},'320 гр',112000,'pasta'),mkFood('pasta_di_mare_360',{ru:'Паста Ди маре',uz:'Di mare pasta',en:'Pasta di mare',it:'Pasta di mare'},'360 гр',142000,'pasta'),mkFood('pasta_fettuccine_alfredo_350',{ru:'Паста фетучини Альфредо',uz:'Fettuccine Alfredo pasta',en:'Fettuccine Alfredo pasta',it:'Fettuccine Alfredo'},'350 гр',79000,'pasta'),mkFood('pasta_fettuccine_bolognese_350',{ru:'Паста фетучини Болоньезе',uz:'Fettuccine Bolognese pasta',en:'Fettuccine Bolognese pasta',it:'Fettuccine Bolognese'},'350 гр',79000,'pasta'),mkFood('pasta_fettuccine_carbonara_veal_350',{ru:'Паста фетучини Карбонара с телятиной',uz:'Buzoq go‘shtli fettuccine Carbonara',en:'Fettuccine Carbonara with veal',it:'Fettuccine Carbonara con vitello'},'350 гр',72000,'pasta')],
+  pizza:[mkFood('pizza_bolognese_420',{ru:'Пицца Болоньезе',uz:'Boloneze pitsa',en:'Bolognese pizza',it:'Pizza Bolognese'},'420 гр',90000,'pizza'),mkFood('pizza_villaggio_420',{ru:'Пицца Вилладжио',uz:'Villaggio pitsa',en:'Villaggio pizza',it:'Pizza Villaggio'},'420 гр',105000,'pizza'),mkFood('pizza_carbona_ra_420',{ru:'Пицца Карбонара',uz:'Karbonara pitsa',en:'Carbonara pizza',it:'Pizza Carbonara'},'420 гр',85000,'pizza'),mkFood('pizza_margherita_420',{ru:'Пицца Маргарита',uz:'Margarita pitsa',en:'Margherita pizza',it:'Pizza Margherita'},'420 гр',65000,'pizza'),mkFood('pizza_mortadella_stracciatella_420',{ru:'Пицца Мортаделла со страчателлой',uz:'Mortadella va stracciatella pitsasi',en:'Mortadella pizza with stracciatella',it:'Pizza mortadella con stracciatella'},'420 гр',118000,'pizza'),mkFood('pizza_pepperoni_420',{ru:'Пицца Пепперони',uz:'Pepperoni pitsa',en:'Pepperoni pizza',it:'Pizza Pepperoni'},'420 гр',78000,'pizza'),mkFood('pizza_pesto_mozzarella_420',{ru:'Пицца Песто с моцареллой',uz:'Pesto va mozzarella pitsasi',en:'Pesto pizza with mozzarella',it:'Pizza pesto con mozzarella'},'420 гр',78000,'pizza'),mkFood('pizza_polo_fungi_420',{ru:'Пицца Поло Фунги',uz:'Pollo funghi pitsa',en:'Pollo funghi pizza',it:'Pizza pollo funghi'},'420 гр',76000,'pizza'),mkFood('pizza_primavera_420',{ru:'Пицца Примавере',uz:'Primavera pitsa',en:'Primavera pizza',it:'Pizza primavera'},'420 гр',102000,'pizza'),mkFood('pizza_quattro_formaggi_420',{ru:'Пицца Четыре сыра',uz:'To‘rt pishloqli pitsa',en:'Four cheese pizza',it:'Pizza quattro formaggi'},'420 гр',92000,'pizza'),mkFood('pizza_salmon_600',{ru:'Пицца со слабосоленым лососем',uz:'Yengil tuzlangan lososli pitsa',en:'Pizza with lightly salted salmon',it:'Pizza con salmone leggermente salato'},'600 гр',107000,'pizza'),mkFood('pizza_caesar_420',{ru:'Пицца Цезарь',uz:'Sezar pitsa',en:'Caesar pizza',it:'Pizza Caesar'},'420 гр',84000,'pizza')],
+  ravioli:[mkFood('ravioli_chicken_mushrooms_350',{ru:'Равиоли с курицей и шампиньонами',uz:'Tovuq va shampinonli ravioli',en:'Ravioli with chicken and mushrooms',it:'Ravioli con pollo e champignon'},'350 гр',72000,'ravioli'),mkFood('ravioli_salmon_350',{ru:'Равиоли с лососем',uz:'Lososli ravioli',en:'Ravioli with salmon',it:'Ravioli al salmone'},'350 гр',98000,'ravioli'),mkFood('ravioli_veal_350',{ru:'Равиоли с телятиной',uz:'Buzoq go‘shtli ravioli',en:'Ravioli with veal',it:'Ravioli con vitello'},'350 гр',82000,'ravioli'),mkFood('ravioli_spinach_ricotta_350',{ru:'Равиоли со шпинатом и рикоттой',uz:'Ismaloq va rikottali ravioli',en:'Ravioli with spinach and ricotta',it:'Ravioli con spinaci e ricotta'},'350 гр',77000,'ravioli')],
+  salads:[mkFood('salad_di_mare_250',{ru:'Салат Ди маре',uz:'Di mare salati',en:'Di mare salad',it:'Insalata di mare'},'250 гр',152000,'salads'),mkFood('salad_caprese_300',{ru:'Салат Капрезе',uz:'Kapreze salati',en:'Caprese salad',it:'Insalata caprese'},'300 гр',75000,'salads'),mkFood('salad_nicoise_tuna_250',{ru:'Салат Нисуаз с тунцом',uz:'Tunetsli Nisuaz salati',en:'Nicoise salad with tuna',it:'Insalata nizzarda con tonno'},'250 гр',105000,'salads'),mkFood('salad_caesar_chicken_320',{ru:'Салат Цезарь с курицей',uz:'Tovuqli Sezar salati',en:'Caesar salad with chicken',it:'Insalata Caesar con pollo'},'320 гр',68000,'salads'),mkFood('salad_burrata_300',{ru:'Салат буратта',uz:'Burrata salati',en:'Burrata salad',it:'Insalata burrata'},'300 гр',107000,'salads'),mkFood('salad_greek_320',{ru:'Салат Греческий',uz:'Yunon salati',en:'Greek salad',it:'Insalata greca'},'320 гр',70000,'salads'),mkFood('salad_crispy_eggplant_300',{ru:'Салат Хрустащие баклажаны',uz:'Qarsildoq baqlajon salati',en:'Crispy eggplant salad',it:'Insalata di melanzane croccanti'},'300 гр',66000,'salads'),mkFood('salad_caesar_shrimp_250',{ru:'Салат Цезарь с креветками',uz:'Krevetkali Sezar salati',en:'Caesar salad with shrimp',it:'Insalata Caesar con gamberi'},'250 гр',118000,'salads')],
+  soups:[mkFood('soup_stracciatello_250',{ru:'Суп страчателло',uz:'Stracciatello sho‘rvasi',en:'Stracciatello soup',it:'Zuppa stracciatella'},'250 гр',48000,'soups')],
+  cold_drinks:[mkFood('drink_pomegranate_orange_450',{ru:'Гранат-апельсин',uz:'Anor-apelsin',en:'Pomegranate-orange',it:'Melograno-arancia'},'450 мл',39000,'cold_drinks'),mkFood('drink_raspberry_passionfruit_450',{ru:'Малина-маракуйя',uz:'Malina-marakuya',en:'Raspberry-passion fruit',it:'Lampone-frutto della passione'},'450 мл',41000,'cold_drinks'),mkFood('drink_mojito_450',{ru:'Мохито',uz:'Moxito',en:'Mojito',it:'Mojito'},'450 мл',34000,'cold_drinks'),mkFood('drink_citrus_barberry_450',{ru:'Цитрус-барбарис',uz:'Sitrus-zirk',en:'Citrus-barberry',it:'Agrumi-crespino'},'450 мл',43000,'cold_drinks'),mkFood('drink_apple_kiwi_450',{ru:'Яблоко-киви',uz:'Olma-kivi',en:'Apple-kiwi',it:'Mela-kiwi'},'450 мл',39000,'cold_drinks')]
+};
+
+const ITEM_INDEX={}; (function buildIndex(){for(const catKey in MENU)(MENU[catKey]||[]).forEach(it=>ITEM_INDEX[it.id]=it);})();
+function nameOf(id){const it=ITEM_INDEX[id];return(it&&it.n&&(it.n[lang]||it.n.ru))?(it.n[lang]||it.n.ru):id;}
+function renderWelcome(){const el=document.getElementById('welcomeLine');if(!el)return;const name=(tg_first_name||tg_username||'').trim();if(!name){el.style.display='none';return;}el.style.display='block';el.innerText=`${UI[lang].welcome}, ${name}!`;}
+function applyUI(){
+  document.getElementById('brandSub').innerText=UI[lang].brandSub;
+  document.getElementById('brandPhone').innerText=PHONE_HUMAN;
+  menuTitle.innerText=UI[lang].menu;mAboutTitle.innerText=UI[lang].aboutTitle;mAboutSub.innerText=UI[lang].aboutSub;aboutAddrLabel.innerText=UI[lang].aboutAddr;aboutPhoneLabel.innerText=UI[lang].aboutPhone;aboutHoursLabel.innerText=UI[lang].aboutHours;mCallTitle.innerText=UI[lang].callTitle;mCallSub.innerText=PHONE_HUMAN;mInstaTitle.innerText='@furkatovich.uz';mInstaSub.innerText=UI[lang].instaSub;
+  const mMgrT=document.getElementById('mManagerTitle'),mMgrS=document.getElementById('mManagerSub');if(mMgrT)mMgrT.innerText=UI[lang].managerTitle;if(mMgrS)mMgrS.innerText=UI[lang].managerSub;
+  const mLegT=document.getElementById('mLegalTitle'),mLegS=document.getElementById('mLegalSub');if(mLegT)mLegT.innerText=UI[lang].legalTitle;if(mLegS)mLegS.innerText=UI[lang].legalSub;
+  searchTitle.innerText=UI[lang].searchResults;cartTitle.innerText=UI[lang].cart;totalLabel.innerText=UI[lang].total;orderBtn.innerText=UI[lang].order;comment.placeholder=UI[lang].comment;sumCurrency.innerText=UI[lang].sum;sumWord.innerText=UI[lang].sum;sumWord2.innerText=UI[lang].sum;stickyCartBtn.innerText=UI[lang].cart;aboutPhoneNum.innerText=PHONE_HUMAN;aboutPhoneNum.href='tel:'+PHONE_RAW;aboutHoursText.innerText='11:00–00:00';mapsBtn.innerText=UI[lang].mapsBtn;subTitle.innerText=UI[lang].subcatsTitle;subHint.innerText=UI[lang].subcatsHint;deliveryTitle.innerText=UI[lang].deliveryTitle;btnDelivery.innerText=UI[lang].delivery;btnPickup.innerText=UI[lang].pickup;phoneInput.placeholder=UI[lang].phonePH;addrInput.placeholder=UI[lang].addrPH;payMethodTitle.innerText=UI[lang].payTitle;btnCash.innerText=UI[lang].cash;btnClick.innerText=UI[lang].click;btnOnline.innerText=UI[lang].online;payTitle.innerText=UI[lang].payClickTitle;payQrHint.innerText=UI[lang].payQrHint;onlineDetails.innerText=UI[lang].onlineDetails;
+  if(window.waiterTitle)waiterTitle.innerText=UI[lang].waiterSheetTitle;if(window.waiterInRestLabel)waiterInRestLabel.innerText=UI[lang].inRest;if(window.tableLabel)tableLabel.innerText=UI[lang].table;if(window.waiterBtn)waiterBtn.innerText=UI[lang].call;if(window.waiterNote)waiterNote.innerText=UI[lang].waiterNote;
+  const d=document.getElementById('aboutDescText');if(d){d.innerHTML=(lang==='ru')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Как оформить заказ:</b><br>1) Выберите категорию<br>2) Добавьте позиции в корзину<br>3) Выберите доставку/самовывоз и оплату<br>4) Нажмите “${UI[lang].order}”<br><br><b>Часы работы:</b> 11:00–00:00<br><b>Адрес:</b> г. Самарканд, ул. Гагарина 188<br><span class="muted">*Цены указаны в сумах.</span>`:(lang==='uz')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Buyurtma berish:</b><br>1) Kategoriyani tanlang<br>2) Savatga qo‘shing<br>3) Yetkazib berish/olib ketish va to‘lovni tanlang<br>4) “${UI[lang].order}” tugmasini bosing<br><br><b>Ish vaqti:</b> 11:00–00:00<br><b>Manzil:</b> Samarqand, Gagarin ko‘chasi, 188<br><span class="muted">*Narxlar so‘mda.</span>`:(lang==='it')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Come ordinare:</b><br>1) Scegli una categoria<br>2) Aggiungi al carrello<br>3) Scegli consegna/ritiro e pagamento<br>4) Premi “${UI[lang].order}”<br><br><b>Orari:</b> 11:00–00:00<br><b>Indirizzo:</b> Samarcanda, via Gagarin, 188<br><span class="muted">*I prezzi sono in UZS.</span>`:`FURKATOVICH — Mazali Taomlar.<br><br><b>How to order:</b><br>1) Choose a category<br>2) Add items to cart<br>3) Choose delivery/pickup & payment<br>4) Press “${UI[lang].order}”<br><br><b>Working hours:</b> 11:00–00:00<br><b>Address:</b> Samarkand, Gagarin St., 188<br><span class="muted">*Prices are in UZS.</span>`;}
+  renderWelcome();renderMainCats();if(!isSearchOpen())renderProducts();updateTotal();updateFulfillmentUI();updatePaymentUI();preloadCategoryImages(category);setTimeout(syncStickyHeight,50);
+}
+function openTopMenu(){closeSearch();menuBackdrop.classList.add('show');menuSheet.classList.add('show');}function closeTopMenu(){menuBackdrop.classList.remove('show');menuSheet.classList.remove('show');}
+function callPhone(e){try{e.preventDefault();e.stopPropagation();}catch(_){}const url='tel:'+PHONE_RAW;try{Telegram.WebApp.openLink(url);}catch(_){window.location.href=url;}}
+function openInstagram(e){try{e.preventDefault();e.stopPropagation();}catch(_){}closeTopMenu();try{Telegram.WebApp.openLink(INSTA_URL);}catch(_){window.open(INSTA_URL,'_blank');}}
+function openMaps(e){try{e.preventDefault();e.stopPropagation();}catch(_){}closeTopMenu();try{Telegram.WebApp.openLink(MAPS_URL);}catch(_){window.open(MAPS_URL,'_blank');}}
+function openMapsHeader(e){try{e.preventDefault();e.stopPropagation();}catch(_){}try{Telegram.WebApp.openLink(MAPS_URL);}catch(_){window.open(MAPS_URL,'_blank');}}
+function toggleAbout(){const w=document.getElementById('aboutWrap');w.style.display=(w.style.display==='none'||!w.style.display)?'block':'none';}
+function toggleLegal(){const w=document.getElementById('legalWrap');w.style.display=(w.style.display==='none'||!w.style.display)?'block':'none';}
+function callLegalPhone(e){try{e.preventDefault();e.stopPropagation();}catch(_){}const url='tel:'+LEGAL_PHONE_RAW;try{Telegram.WebApp.openLink(url);}catch(_){window.location.href=url;}}
+function openManager(e){try{e.preventDefault();e.stopPropagation();}catch(_){}closeTopMenu();if(MANAGER_USERNAME&&MANAGER_USERNAME.trim()){const url=`https://t.me/${MANAGER_USERNAME.replace('@','')}`;try{Telegram.WebApp.openLink(url);return;}catch(_){window.open(url,'_blank');return;}}}
+function fillTables(){const sel=document.getElementById('tableSelect');if(!sel)return;const keep=sel.value;sel.innerHTML='<option value="">—</option>';for(let i=1;i<=30;i++){const o=document.createElement('option');o.value=String(i);o.textContent=`${i}`;sel.appendChild(o);}if(keep)sel.value=keep;}
+function openWaiter(e){try{e.preventDefault();e.stopPropagation();}catch(_){}closeTopMenu();fillTables();waiterBackdrop.classList.add('show');waiterSheet.classList.add('show');}function closeWaiter(){waiterBackdrop.classList.remove('show');waiterSheet.classList.remove('show');}
+function sendWaiterCall(){const inRest=!!document.getElementById('inRestToggle')?.checked;const table=(document.getElementById('tableSelect')?.value||'').trim();if(!table){alert(UI[lang].reqTable);return;}const payload={action:'waiter',brand:'FURKATOVICH — Mazali Taomlar',tg:{id:tg_id,username:tg_username,first_name:tg_first_name},in_restaurant:inRest,table,lang};showToast('✅');setTimeout(()=>{try{Telegram.WebApp.sendData(JSON.stringify(payload));}catch(_){}closeWaiter();},350);}
+function catLabel(key){return CATEGORY_LABELS?.[key]?.[lang]||key;}function renderMainCats(){cats.innerHTML='';(GROUPS.menu||[]).forEach(k=>{const active=(category===k)?'active':'';cats.innerHTML+=`<button class="btn cat-btn ${active}" onclick="onMainCatClick('${k}')">${escapeHtml(catLabel(k))}</button>`;});requestAnimationFrame(()=>{cats.scrollLeft=0;});}
+function onMainCatClick(k){category=k;closeSearch();renderMainCats();preloadCategoryImages(category);renderProducts();try{cats.scrollLeft=0;}catch(_){}}
+function openSubcats(g){closeSearch();const list=(GROUPS[g]||[]);subGrid.innerHTML='';list.forEach(k=>{const isA=(category===k)?'active':'';subGrid.innerHTML+=`<button class="subcat-square ${isA}" onclick="selectSubcat('${k}')">${escapeHtml(catLabel(k))}</button>`;});subBackdrop.classList.add('show');subSheet.classList.add('show');}function closeSubcats(){subBackdrop.classList.remove('show');subSheet.classList.remove('show');}function selectSubcat(k){category=k;closeSubcats();if(!isSearchOpen())renderProducts();}
+function isSearchOpen(){return searchWrap.classList.contains('show');}function toggleSearch(){isSearchOpen()?closeSearch():openSearch();}function openSearch(){searchWrap.classList.add('show');searchTitle.classList.add('show');searchInput.value='';searchInput.focus();searchProducts();}function closeSearch(){searchWrap.classList.remove('show');searchTitle.classList.remove('show');searchInput.value='';renderProducts();}function clearSearch(){closeSearch();}function onSearchKey(e){if(e.key==='Enter')closeSearch();}
+function matchesQuery(it,q){if(!q)return true;const all=[it.n?.ru,it.n?.uz,it.n?.en,it.n?.it,String(it.meta||''),String(it.id||''),String(it.p||'')].filter(Boolean).join(' ').toLowerCase();return all.includes(q);}function iterAllItems(fn){for(const catKey in MENU)(MENU[catKey]||[]).forEach(it=>fn(it,catKey));}
+function searchProducts(){const q=(searchInput.value||'').trim().toLowerCase();products.innerHTML='';if(!q){renderProducts();return;}let found=0;iterAllItems(it=>{if(matchesQuery(it,q)){cart[it.id]=cart[it.id]||0;products.innerHTML+=cardHTML(it);found++;}});if(found===0)products.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:18px;font-weight:900;opacity:.95;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;color:#fff;">${escapeHtml(UI[lang].nothing)}</div>`;}
+function cardHTML(it){const id=it.id,qty=cart[id]||0,meta=it.meta?String(it.meta):'';return `<div class="card"><div class="img"><img src="${withVersion(imageCandidates(id)[0])}" data-try-index="1" onerror="imgFallback(this,'${id}')" onclick="openImage(event,'${id}')" alt="${escapeHtml(nameOf(id))}" loading="eager" decoding="async" fetchpriority="high"></div><div class="item-name">${escapeHtml(nameOf(id))}</div><div class="item-meta">${escapeHtml(meta||'')}</div><div class="price">${formatSum(it.p)} <small>${UI[lang].sum}</small></div><div class="counter"><button type="button" onclick="chg('${id}',-1)">−</button><span id="c_${id}">${qty}</span><button type="button" onclick="chg('${id}',1)">+</button></div></div>`;}
+function renderProducts(){products.innerHTML='';const list=MENU[category]||[];preloadCategoryImages(category);if(!list.length){products.innerHTML=`<div class="card" style="grid-column:1/-1;font-weight:900;">${escapeHtml(UI[lang].nothing)}</div>`;return;}list.forEach(it=>{cart[it.id]=cart[it.id]||0;products.innerHTML+=cardHTML(it);});}
+function openImage(e,id){try{e.preventDefault();e.stopPropagation();}catch(_){}const it=ITEM_INDEX[id];if(!it)return;imgModalTitle.innerText=nameOf(id);setProductImage(imgModalImg,id);const meta=`${UI[lang].metaPrefix}: ${it.meta||'—'}\n${UI[lang].price}: ${formatSum(it.p)} ${UI[lang].sum}`;imgDescTitle.innerText=nameOf(id);imgDescMeta.innerText=meta;const desc=(it.desc&&(it.desc[lang]||it.desc.ru))?(it.desc[lang]||it.desc.ru):'';imgDescText.innerText=desc;const chips=document.getElementById('imgDescChips');chips.innerHTML='';if(it.meta)chips.innerHTML+=`<div class="chip">${escapeHtml(it.meta)}</div>`;chips.innerHTML+=`<div class="chip">${formatSum(it.p)} ${escapeHtml(UI[lang].sum)}</div>`;chips.innerHTML+=`<div class="chip">${escapeHtml(catLabel(category))}</div>`;imgModal.classList.add('show');}
+function closeImgModal(e){try{e.preventDefault();e.stopPropagation();}catch(_){}imgModal.classList.remove('show');imgModalImg.src='';}
+let toastTimer=null;function showToast(t){popup.classList.add('show');popupText.innerText=t||'✅';clearTimeout(toastTimer);toastTimer=setTimeout(()=>popup.classList.remove('show'),1200);}
+function syncCounters(id){const c=document.getElementById('c_'+id);if(c)c.innerText=cart[id]||0;}function calcItemsSum(){let s=0;for(const id in cart)s+=(cart[id]||0)*(ITEM_INDEX[id]?.p||0);return s;}
+function renderCartItems(){const box=document.getElementById('cartItems');if(!box)return;const selected=[];for(const id in cart){const qty=Number(cart[id]||0);if(qty>0&&ITEM_INDEX[id])selected.push({id,qty,it:ITEM_INDEX[id]});}if(selected.length===0){box.innerHTML=`<div class="cart-empty">${escapeHtml(UI[lang].empty)}</div>`;return;}box.innerHTML=selected.map(({id,qty,it})=>{const one=Number(it.p||0),sum=one*qty,meta=it.meta?`<div class="cart-item-meta">${escapeHtml(it.meta)}</div>`:'';return `<div class="cart-item"><div><div class="cart-item-name">${escapeHtml(nameOf(id))}</div>${meta}<div class="cart-item-meta">${qty} × ${formatSum(one)} ${escapeHtml(UI[lang].sum)}</div></div><div class="cart-item-sum">${formatSum(sum)} ${escapeHtml(UI[lang].sum)}</div></div>`;}).join('');}
+function updateTotal(){const itemsSum=calcItemsSum();total.innerText=formatSum(itemsSum);grandTotal.innerText=formatSum(itemsSum);stickyTotal.innerText=formatSum(itemsSum);renderCartItems();}function chg(id,delta){cart[id]=Math.max(0,(cart[id]||0)+delta);syncCounters(id);updateTotal();}
+function setFulfillment(type,btn){fulfillment=type;document.getElementById('btnDelivery').classList.remove('active');document.getElementById('btnPickup').classList.remove('active');btn.classList.add('active');updateFulfillmentUI();}function updateFulfillmentUI(){if(fulfillment==='delivery'){btnDelivery.classList.add('active');btnPickup.classList.remove('active');addrInput.style.display='block';}else{btnPickup.classList.add('active');btnDelivery.classList.remove('active');addrInput.style.display='none';addrInput.value='';}}
+function setPayment(type,btn){paymentMethod=type;['btnCash','btnClick','btnOnline'].forEach(id=>document.getElementById(id).classList.remove('active'));btn.classList.add('active');updatePaymentUI();if(paymentMethod==='click')openPaySheet();}function updatePaymentUI(){if(paymentMethod==='cash'){btnCash.classList.add('active');onlineDetails.style.display='none';}else if(paymentMethod==='click'){btnClick.classList.add('active');onlineDetails.style.display='none';}else{btnOnline.classList.add('active');onlineDetails.style.display='block';onlineDetails.innerText=UI[lang].onlineDetails;}}
+function openPaySheet(){const qr=document.getElementById('clickQrImg');qr.src=CLICK_QR_IMG+`?v=${Date.now()}`;qr.onerror=function(){this.onerror=null;this.src='images/logo.png';};clickPayDetails.innerText=UI[lang].onlineDetails;payBackdrop.classList.add('show');paySheet.classList.add('show');}function closePaySheet(){payBackdrop.classList.remove('show');paySheet.classList.remove('show');try{document.getElementById('clickQrImg').src='';}catch(_){}}
+function genOrderId(){const d=new Date(),dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),key=`artcafe_seq_${d.getFullYear()}${mm}${dd}`;let n=Number(localStorage.getItem(key)||0)+1;localStorage.setItem(key,String(n));return `FURKATOVICH-${dd}${mm}-${String(n).padStart(3,'0')}`;}
+function normalizePhone(p){return String(p||'').replace(/[^\d+]/g,'').trim();}function getPaymentLabel(){if(paymentMethod==='cash')return'Наличные';if(paymentMethod==='click')return'Click';if(paymentMethod==='online')return'Online';return paymentMethod||'Не указан';}
+function sendOrder(){const items=[];for(const id in cart){const qty=Number(cart[id]||0);if(qty>0){const it=ITEM_INDEX[id]||{};items.push({id,qty,price:it.p||0,name_ru:it.n?.ru||id,name_lang:nameOf(id),meta:it.meta||null,category});}}if(items.length===0){alert(UI[lang].empty);return;}const phone=normalizePhone(phoneInput.value);if(!phone){alert(UI[lang].reqPhone);phoneInput.focus();return;}if(fulfillment==='delivery'){const addr=(addrInput.value||'').trim();if(!addr){alert(UI[lang].reqAddr);addrInput.focus();return;}}showToast('✅');const totalSum=calcItemsSum();const payload={action:'order',brand:'FURKATOVICH — Mazali Taomlar',tg:{id:tg_id,username:tg_username,first_name:tg_first_name},fulfillment,phone,address:(fulfillment==='delivery')?(addrInput.value||'').trim():null,payment_method:paymentMethod,payment_type:getPaymentLabel(),payment_label:getPaymentLabel(),payment_text:`Тип оплаты: ${getPaymentLabel()}`,payment_data:(paymentMethod==='online'||paymentMethod==='click')?{receiver:ONLINE_PAY.receiver,card:ONLINE_PAY.card,click_qr:(paymentMethod==='click')?'images/CLICK_QR.jpg':null}:null,items,total:formatSum(totalSum),total_num:totalSum,comment:comment.value,order_id:genOrderId(),lang};setTimeout(()=>{try{Telegram.WebApp.sendData(JSON.stringify(payload));Telegram.WebApp.close();}catch(_){try{Telegram.WebApp.close();}catch(__){}}},650);}
+function openCart(){const el=document.getElementById('cartBox');syncStickyHeight();try{el.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){}}
+function setLang(l,btn){lang=l;document.querySelectorAll('.langs .btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applyUI();}
+try{Telegram.WebApp.setHeaderColor?.('#6D1020');Telegram.WebApp.setBackgroundColor?.('#ffffff');}catch(_){}
+function initDefaults(){fulfillment='delivery';paymentMethod='cash';document.getElementById('btnDelivery')?.classList.add('active');document.getElementById('btnCash')?.classList.add('active');fillTables();}
+renderMainCats();renderProducts();lang='ru';document.querySelectorAll('.langs .btn').forEach(b=>b.classList.remove('active'));document.getElementById('langRU')?.classList.add('active');initDefaults();applyUI();updateTotal();setTimeout(syncStickyHeight,50);closeSearch();
+</script>
+</body>
+</html>
