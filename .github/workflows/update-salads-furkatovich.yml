@@ -1,0 +1,67 @@
+name: Update FURKATOVICH salads
+on:
+  push:
+    paths:
+      - '.github/workflows/update-salads-furkatovich.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace salads menu
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          salads = [
+              ('salad_svezhiy','Свежий салат',7000),
+              ('salad_solenya','Соленья',7000),
+              ('salad_chakka','Чакка',7000),
+              ('salad_vinegret','Винегрет',10000),
+              ('salad_olivye','Оливье',12000),
+              ('salad_chalob','Чалоб',6000),
+              ('salad_kapusta_krasnaya','Капуста красная',7000),
+              ('salad_frantsuzskiy','Французский салат',12000),
+              ('salad_funchoza','Фунчоза',10000),
+              ('salad_mazhnuntol','Мажнунтол',12000),
+              ('salad_aziya','Азия',12000),
+              ('salad_sheikh','Салат Шейх',13000),
+              ('salad_smak','Смак',12000),
+              ('salad_ruletiki_baklazhan','Рулетики из баклажана',10000),
+              ('salad_hrust_baklazhan','Хрустящий баклажан',30000),
+              ('salad_he','Салат Хэ',12000),
+              ('salad_grecheskiy','Греческий',15000),
+              ('salad_ogurcy_myaso','Огурцы с мясом',12000),
+              ('salad_baklazhan','Салат Баклажан',15000),
+              ('salad_shef','Салат от шефа',18000),
+              ('salad_russkaya_krasavitsa','Русская красавица',15000),
+              ('salad_brokkoli','Брокколи',12000),
+              ('salad_yaichnitsa_shuba','Яичница под шубой',17000),
+              ('salad_pod_shuboy','Под шубой',15000),
+              ('salad_chirokchi','Чирокчи',12000),
+              ('salad_myasnoy_griby','Мясной с грибами',12000),
+          ]
+
+          items=[]
+          for sid, name, price in salads:
+              safe=name.replace("'", "\\'")
+              items.append(f"mkFood('{sid}',{{ru:'{safe}'}},'',{price},'salads')")
+          new_line = '  salads:[' + ','.join(items) + '],'
+
+          s2, n = re.subn(r"^  salads:\[.*?\],$", new_line, s, count=1, flags=re.M)
+          if n != 1:
+              raise SystemExit(f'Expected 1 salads array, replaced {n}')
+
+          p.write_text(s2, encoding='utf-8')
+          PY
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html
+          git diff --cached --quiet || git commit -m "Replace salads with FURKATOVICH menu"
+          git push
