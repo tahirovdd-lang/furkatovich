@@ -10,9 +10,9 @@
   <style>
     :root{
       --bg:#ffffff;
-      --tile:#55C2E6;
-      --tile-2:#2FA7D3;
-      --tile-3:#82D7EF;
+      --tile:#3A8DCC;
+      --tile-2:#246EA8;
+      --tile-3:#66B6E3;
 
       --white:#ffffff;
       --text:#ffffff;
@@ -237,7 +237,7 @@
       padding:10px 12px;
       border-radius:16px;
       border:1px solid rgba(0,0,0,.08);
-      background:rgba(85,194,230,.10);
+      background:rgba(58,141,204,.10);
     }
     .cart-item-name{font-weight:900;line-height:1.2;}
     .cart-item-meta{font-size:12px;font-weight:800;opacity:.75;margin-top:3px;}
@@ -437,7 +437,7 @@
     .sticky-checkout{
       position:fixed;left:0;right:0;bottom:0;
       padding:10px 12px;
-      background: rgba(85,194,230,.78);
+      background: rgba(58,141,204,.78);
       backdrop-filter: blur(10px);
       z-index:999;
       border-top:1px solid rgba(255,255,255,.14);
@@ -490,7 +490,7 @@
     .menu-left{display:flex;align-items:center;gap:10px;min-width:0;}
     .menu-ic{
       width:30px;height:30px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-      background: rgba(85,194,230,.16);
+      background: rgba(58,141,204,.16);
       flex:0 0 auto;
     }
     .menu-txt{display:flex;flex-direction:column;min-width:0;}
@@ -1050,7 +1050,7 @@ function normalizePhone(p){return String(p||'').replace(/[^\d+]/g,'').trim();}fu
 function sendOrder(){const items=[];for(const id in cart){const qty=Number(cart[id]||0);if(qty>0){const it=ITEM_INDEX[id]||{};items.push({id,qty,price:it.p||0,name_ru:it.n?.ru||id,name_lang:nameOf(id),meta:it.meta||null,category});}}if(items.length===0){alert(UI[lang].empty);return;}const phone=normalizePhone(phoneInput.value);if(!phone){alert(UI[lang].reqPhone);phoneInput.focus();return;}if(fulfillment==='delivery'){const addr=(addrInput.value||'').trim();if(!addr){alert(UI[lang].reqAddr);addrInput.focus();return;}}showToast('✅');const totalSum=calcItemsSum();const payload={action:'order',brand:'FURKATOVICH — Mazali Taomlar',tg:{id:tg_id,username:tg_username,first_name:tg_first_name},fulfillment,phone,address:(fulfillment==='delivery')?(addrInput.value||'').trim():null,payment_method:paymentMethod,payment_type:getPaymentLabel(),payment_label:getPaymentLabel(),payment_text:`Тип оплаты: ${getPaymentLabel()}`,payment_data:(paymentMethod==='online'||paymentMethod==='click')?{receiver:ONLINE_PAY.receiver,card:ONLINE_PAY.card,click_qr:(paymentMethod==='click')?'images/CLICK_QR.jpg':null}:null,items,total:formatSum(totalSum),total_num:totalSum,comment:comment.value,order_id:genOrderId(),lang};setTimeout(()=>{try{Telegram.WebApp.sendData(JSON.stringify(payload));Telegram.WebApp.close();}catch(_){try{Telegram.WebApp.close();}catch(__){}}},650);}
 function openCart(){const el=document.getElementById('cartBox');syncStickyHeight();try{el.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){}}
 function setLang(l,btn){lang=l;document.querySelectorAll('.langs .btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applyUI();}
-try{Telegram.WebApp.setHeaderColor?.('#55C2E6');Telegram.WebApp.setBackgroundColor?.('#ffffff');}catch(_){}
+try{Telegram.WebApp.setHeaderColor?.('#3A8DCC');Telegram.WebApp.setBackgroundColor?.('#ffffff');}catch(_){}
 function initDefaults(){fulfillment='delivery';paymentMethod='cash';document.getElementById('btnDelivery')?.classList.add('active');document.getElementById('btnCash')?.classList.add('active');fillTables();}
 renderMainCats();renderProducts();lang='ru';document.querySelectorAll('.langs .btn').forEach(b=>b.classList.remove('active'));document.getElementById('langRU')?.classList.add('active');initDefaults();applyUI();updateTotal();setTimeout(syncStickyHeight,50);closeSearch();
 </script>
