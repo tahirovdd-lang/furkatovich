@@ -100,7 +100,13 @@
       font-size:12.8px;
       letter-spacing:.3px;
       opacity:.95;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:2px;
+      line-height:1.15;
     }
+    .brand-phone span{display:block;white-space:nowrap;}
 
     .welcome{
       margin-top:6px;
@@ -212,7 +218,7 @@
     .img img{max-width:150px;max-height:150px;object-fit:cover;transform:scale(1.06);cursor:pointer;border-radius:18px;}
     .item-name{margin-top:2px;padding:0 6px;font-weight:900;line-height:1.15;min-height:42px;display:flex;align-items:center;justify-content:center;word-break:break-word;}
     .item-meta{margin-top:6px;font-weight:800;font-size:12px;opacity:.82;line-height:1.15;min-height:16px;}
-    .price{font-weight:900;color:var(--tile);margin-top:8px;}
+    .price{font-weight:900;color:#123B6D;margin-top:8px;}
     .price small{font-weight:800;opacity:.75;margin-left:4px;}
     .counter{display:flex;justify-content:center;gap:10px;margin-top:8px;align-items:center;}
     .counter button{
@@ -563,7 +569,7 @@
   <div class="brand-wrap">
     <div class="brand-title">FURKATOVICH</div>
     <div class="brand-title2" id="brandSub">Mazali Taomlar</div>
-    <div class="brand-phone" id="brandPhone">+998 (95) 560-88-81<br>+998 (93) 999-59-99</div>
+    <div class="brand-phone" id="brandPhone"><span>+998 (95) 560-88-81</span><span>+998 (93) 999-59-99</span></div>
     <div class="welcome" id="welcomeLine" style="display:none;"></div>
   </div>
 
@@ -682,7 +688,7 @@
           <div style="height:12px;"></div>
 
           <div style="font-weight:900; margin-bottom:6px;" id="aboutHoursLabel">🕒 График</div>
-          <div style="font-weight:900; color:#1d1d1d; opacity:.92;" id="aboutHoursText">11:00–00:00</div>
+          <div style="font-weight:900; color:#1d1d1d; opacity:.92;" id="aboutHoursText">09:00–22:00</div>
 
           <div class="about-desc" id="aboutDescText"></div>
         </div>
@@ -1011,9 +1017,9 @@ function applyUI(){
   menuTitle.innerText=UI[lang].menu;mAboutTitle.innerText=UI[lang].aboutTitle;mAboutSub.innerText=UI[lang].aboutSub;aboutAddrLabel.innerText=UI[lang].aboutAddr;aboutPhoneLabel.innerText=UI[lang].aboutPhone;aboutHoursLabel.innerText=UI[lang].aboutHours;mCallTitle.innerText=UI[lang].callTitle;mCallSub.innerText=PHONE_HUMAN;mInstaTitle.innerText='@furkatovich.uz';mInstaSub.innerText=UI[lang].instaSub;
   const mMgrT=document.getElementById('mManagerTitle'),mMgrS=document.getElementById('mManagerSub');if(mMgrT)mMgrT.innerText=UI[lang].managerTitle;if(mMgrS)mMgrS.innerText=UI[lang].managerSub;
   const mLegT=document.getElementById('mLegalTitle'),mLegS=document.getElementById('mLegalSub');if(mLegT)mLegT.innerText=UI[lang].legalTitle;if(mLegS)mLegS.innerText=UI[lang].legalSub;
-  searchTitle.innerText=UI[lang].searchResults;cartTitle.innerText=UI[lang].cart;totalLabel.innerText=UI[lang].total;orderBtn.innerText=UI[lang].order;comment.placeholder=UI[lang].comment;sumCurrency.innerText=UI[lang].sum;sumWord.innerText=UI[lang].sum;sumWord2.innerText=UI[lang].sum;stickyCartBtn.innerText=UI[lang].cart;aboutPhoneNum.innerText=PHONE_HUMAN;aboutPhoneNum.href='tel:'+PHONE_RAW;aboutHoursText.innerText='11:00–00:00';mapsBtn.innerText=UI[lang].mapsBtn;subTitle.innerText=UI[lang].subcatsTitle;subHint.innerText=UI[lang].subcatsHint;deliveryTitle.innerText=UI[lang].deliveryTitle;btnDelivery.innerText=UI[lang].delivery;btnPickup.innerText=UI[lang].pickup;phoneInput.placeholder=UI[lang].phonePH;addrInput.placeholder=UI[lang].addrPH;payMethodTitle.innerText=UI[lang].payTitle;btnCash.innerText=UI[lang].cash;btnClick.innerText=UI[lang].click;btnOnline.innerText=UI[lang].online;payTitle.innerText=UI[lang].payClickTitle;payQrHint.innerText=UI[lang].payQrHint;onlineDetails.innerText=UI[lang].onlineDetails;
+  searchTitle.innerText=UI[lang].searchResults;cartTitle.innerText=UI[lang].cart;totalLabel.innerText=UI[lang].total;orderBtn.innerText=UI[lang].order;comment.placeholder=UI[lang].comment;sumCurrency.innerText=UI[lang].sum;sumWord.innerText=UI[lang].sum;sumWord2.innerText=UI[lang].sum;stickyCartBtn.innerText=UI[lang].cart;aboutPhoneNum.innerText=PHONE_HUMAN;aboutPhoneNum.href='tel:'+PHONE_RAW;aboutHoursText.innerText='09:00–22:00';mapsBtn.innerText=UI[lang].mapsBtn;subTitle.innerText=UI[lang].subcatsTitle;subHint.innerText=UI[lang].subcatsHint;deliveryTitle.innerText=UI[lang].deliveryTitle;btnDelivery.innerText=UI[lang].delivery;btnPickup.innerText=UI[lang].pickup;phoneInput.placeholder=UI[lang].phonePH;addrInput.placeholder=UI[lang].addrPH;payMethodTitle.innerText=UI[lang].payTitle;btnCash.innerText=UI[lang].cash;btnClick.innerText=UI[lang].click;btnOnline.innerText=UI[lang].online;payTitle.innerText=UI[lang].payClickTitle;payQrHint.innerText=UI[lang].payQrHint;onlineDetails.innerText=UI[lang].onlineDetails;
   if(window.waiterTitle)waiterTitle.innerText=UI[lang].waiterSheetTitle;if(window.waiterInRestLabel)waiterInRestLabel.innerText=UI[lang].inRest;if(window.tableLabel)tableLabel.innerText=UI[lang].table;if(window.waiterBtn)waiterBtn.innerText=UI[lang].call;if(window.waiterNote)waiterNote.innerText=UI[lang].waiterNote;
-  const d=document.getElementById('aboutDescText');if(d){d.innerHTML=(lang==='ru')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Как оформить заказ:</b><br>1) Выберите категорию<br>2) Добавьте позиции в корзину<br>3) Выберите доставку/самовывоз и оплату<br>4) Нажмите “${UI[lang].order}”<br><br><b>Часы работы:</b> 11:00–00:00<br><b>Адрес:</b> г. Самарканд, ул. Гагарина 188<br><span class="muted">*Цены указаны в сумах.</span>`:(lang==='uz')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Buyurtma berish:</b><br>1) Kategoriyani tanlang<br>2) Savatga qo‘shing<br>3) Yetkazib berish/olib ketish va to‘lovni tanlang<br>4) “${UI[lang].order}” tugmasini bosing<br><br><b>Ish vaqti:</b> 11:00–00:00<br><b>Manzil:</b> Samarqand, Gagarin ko‘chasi, 188<br><span class="muted">*Narxlar so‘mda.</span>`:(lang==='tj')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Чӣ тавр фармоиш додан:</b><br>1) Категорияро интихоб кунед<br>2) Маҳсулотро ба сабад илова кунед<br>3) Расонидан/худбарорӣ ва тарзи пардохтро интихоб кунед<br>4) “${UI[lang].order}”-ро пахш кунед<br><br><b>Соати корӣ:</b> 11:00–00:00<br><b>Суроға:</b> ш. Самарқанд, кӯчаи Гагарин, 188<br><span class="muted">*Нархҳо бо сӯм нишон дода шудаанд.</span>`:`FURKATOVICH — Mazali Taomlar.<br><br><b>How to order:</b><br>1) Choose a category<br>2) Add items to cart<br>3) Choose delivery/pickup & payment<br>4) Press “${UI[lang].order}”<br><br><b>Working hours:</b> 11:00–00:00<br><b>Address:</b> Samarkand, Gagarin St., 188<br><span class="muted">*Prices are in UZS.</span>`;}
+  const d=document.getElementById('aboutDescText');if(d){d.innerHTML=(lang==='ru')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Как оформить заказ:</b><br>1) Выберите категорию<br>2) Добавьте позиции в корзину<br>3) Выберите доставку/самовывоз и оплату<br>4) Нажмите “${UI[lang].order}”<br><br><b>Часы работы:</b> 09:00–22:00<br><b>Адрес:</b> г. Самарканд, ул. Гагарина 188<br><span class="muted">*Цены указаны в сумах.</span>`:(lang==='uz')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Buyurtma berish:</b><br>1) Kategoriyani tanlang<br>2) Savatga qo‘shing<br>3) Yetkazib berish/olib ketish va to‘lovni tanlang<br>4) “${UI[lang].order}” tugmasini bosing<br><br><b>Ish vaqti:</b> 09:00–22:00<br><b>Manzil:</b> Samarqand, Gagarin ko‘chasi, 188<br><span class="muted">*Narxlar so‘mda.</span>`:(lang==='tj')?`FURKATOVICH — Mazali Taomlar.<br><br><b>Чӣ тавр фармоиш додан:</b><br>1) Категорияро интихоб кунед<br>2) Маҳсулотро ба сабад илова кунед<br>3) Расонидан/худбарорӣ ва тарзи пардохтро интихоб кунед<br>4) “${UI[lang].order}”-ро пахш кунед<br><br><b>Соати корӣ:</b> 09:00–22:00<br><b>Суроға:</b> ш. Самарқанд, кӯчаи Гагарин, 188<br><span class="muted">*Нархҳо бо сӯм нишон дода шудаанд.</span>`:`FURKATOVICH — Mazali Taomlar.<br><br><b>How to order:</b><br>1) Choose a category<br>2) Add items to cart<br>3) Choose delivery/pickup & payment<br>4) Press “${UI[lang].order}”<br><br><b>Working hours:</b> 09:00–22:00<br><b>Address:</b> Samarkand, Gagarin St., 188<br><span class="muted">*Prices are in UZS.</span>`;}
   renderWelcome();renderMainCats();if(!isSearchOpen())renderProducts();updateTotal();updateFulfillmentUI();updatePaymentUI();preloadCategoryImages(category);setTimeout(syncStickyHeight,50);
 }
 function openTopMenu(){closeSearch();menuBackdrop.classList.add('show');menuSheet.classList.add('show');}function closeTopMenu(){menuBackdrop.classList.remove('show');menuSheet.classList.remove('show');}
