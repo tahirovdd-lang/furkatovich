@@ -981,15 +981,18 @@ function formatSum(x){ const n=Number(x)||0; return n.toString().replace(/\B(?=(
 
 const CATEGORY_LABELS = {
   sides:{ru:'Гарниры',uz:'Garnirlar',en:'Sides',tj:'Гарнирҳо'},
-  breakfast:{ru:'Завтрак',uz:'Nonushta',en:'Breakfast',tj:'Наҳорӣ'},
-  pasta:{ru:'Паста',uz:'Pasta',en:'Pasta',tj:'Паста'},
-  pizza:{ru:'Пицца',uz:'Pitsa',en:'Pizza',tj:'Питса'},
-  ravioli:{ru:'Равиоли',uz:'Ravioli',en:'Ravioli',tj:'Равиоли'},
   salads:{ru:'Салаты',uz:'Salatlar',en:'Salads',tj:'Хӯришҳо'},
   soups:{ru:'Супы',uz:'Sho‘rvalar',en:'Soups',tj:'Шӯрбоҳо'},
-  cold_drinks:{ru:'Холодные напитки',uz:'Sovuq ichimliklar',en:'Cold drinks',tj:'Нӯшокиҳои хунук'}
+  hot_dishes:{ru:'Горячие блюда',uz:'Issiq taomlar',en:'Hot dishes',tj:'Таомҳои гарм'},
+  plov:{ru:'Плов',uz:'Osh',en:'Plov',tj:'Оши палав'},
+  bistro:{ru:'Бистро',uz:'Bistro',en:'Bistro',tj:'Бистро'},
+  sets:{ru:'Сеты',uz:'Setlar',en:'Sets',tj:'Сетҳо'},
+  hot_dog:{ru:'Хот-Дог',uz:'Hot-Dog',en:'Hot Dog',tj:'Хот-Дог'},
+  cold_drinks:{ru:'Холодные напитки',uz:'Sovuq ichimliklar',en:'Cold drinks',tj:'Нӯшокиҳои хунук'},
+  hot_drinks:{ru:'Горячие напитки',uz:'Issiq ichimliklar',en:'Hot drinks',tj:'Нӯшокиҳои гарм'},
+  desserts:{ru:'Десерты',uz:'Desertlar',en:'Desserts',tj:'Шириниҳо'}
 };
-const GROUPS={menu:['sides','breakfast','pasta','pizza','ravioli','salads','soups','cold_drinks']};
+const GROUPS={menu:['sides','salads','soups','hot_dishes','plov','bistro','sets','hot_dog','cold_drinks','hot_drinks','desserts']};
 let mainGroup='menu'; let category=GROUPS.menu[0]; let cart={}; let fulfillment='delivery'; let paymentMethod='cash';
 
 function mkFood(id,name,meta,price,catKey){
