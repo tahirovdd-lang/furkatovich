@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>FURKATOVICH — Mazali Taomlar</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>body{font-family:Arial,sans-serif;margin:0;background:#fff;color:#10233e}.header{padding:24px 16px;text-align:center;background:linear-gradient(180deg,#0b2746,#061629);color:#fff}.header img{width:130px;max-width:40vw}.header h1{margin:10px 0 2px;font-size:26px}.header p{margin:0;color:#d4a640;font-weight:700}.contacts{font-size:13px;margin-top:8px}.page{max-width:640px;margin:auto;padding:16px}.links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.btn{display:block;padding:12px;border-radius:14px;text-align:center;text-decoration:none;background:#0b2746;color:white;font-weight:700}.title{font-size:22px;font-weight:800;margin:12px 0}.card{display:flex;justify-content:space-between;gap:12px;padding:14px 4px;border-bottom:1px solid #e5e5e5}.name{font-weight:700}.price{font-weight:800;color:#9b7119;white-space:nowrap}.address{margin:16px 0;padding:14px;border-radius:14px;background:#f5f6f8;font-size:14px;line-height:1.4}</style>
+</head><body>
+<div class="header"><img src="images/logo.png" alt="FURKATOVICH logo"><h1>FURKATOVICH</h1><p>Mazali Taomlar</p><div class="contacts">+998 (95) 560-88-81<br>+998 (93) 999-59-99</div></div>
+<div class="page"><div class="links"><a class="btn" href="https://yandex.uz/maps/org/furkatovich/30094575789/">📍 Яндекс Карты</a><a class="btn" href="https://www.instagram.com/furkatovich.uz">📷 Instagram</a></div><div class="address"><b>Адрес:</b> г. Самарканд, ул. Гагарина 188</div><div class="title">Салаты</div><div id="menu"></div></div>
+<script>
+const items=[['Свежий салат',7000],['Соленья',7000],['Чакка',7000],['Винегрет',10000],['Оливье',12000],['Чалоб',6000],['Капуста красная',7000],['Французский салат',12000],['Фунчоза',10000],['Мажнунтол',12000],['Азия',12000],['Салат Шейх',13000],['Смак',12000],['Рулетики из баклажана',10000],['Хрустящий баклажан',30000],['Салат Хэ',12000],['Греческий',15000],['Огурцы с мясом',12000],['Салат Баклажан',15000],['Салат от шефа',18000],['Русская красавица',15000],['Брокколи',12000],['Яичница под шубой',17000],['Под шубой',15000],['Чирокчи',12000],['Мясной с грибами',12000]];
+menu.innerHTML=items.map(([n,p])=>`<div class="card"><div class="name">${n}</div><div class="price">${p.toLocaleString('ru-RU')} сум</div></div>`).join('');
+try{Telegram.WebApp.ready();Telegram.WebApp.expand();}catch(e){}
+</script></body></html>
