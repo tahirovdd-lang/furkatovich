@@ -1,0 +1,60 @@
+name: Fix all salad translations
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-all-salad-translations.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add complete RU UZ EN TJ names for salads
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          translations = {
+            'salad_svezhiy': ('Свежий салат','Yangi salat','Fresh salad','Салати тару тоза'),
+            'salad_solenya': ('Соленья','Tuzlamalar','Assorted pickles','Туршиҳо'),
+            'salad_chakka': ('Чакка','Chakka','Chakka','Чакка'),
+            'salad_vinegret': ('Винегрет','Vinegret','Vinaigrette salad','Винегрет'),
+            'salad_olivye': ('Оливье','Olivye','Olivier salad','Оливье'),
+            'salad_chalob': ('Чалоб','Chalob','Chalob','Чалоб'),
+            'salad_kapusta_krasnaya': ('Капуста красная','Qizil karam','Red cabbage','Карами сурх'),
+            'salad_frantsuzskiy': ('Французский салат','Fransuz salati','French salad','Салати фаронсавӣ'),
+            'salad_funchoza': ('Фунчоза','Funchoza','Funchoza','Фунчоза'),
+            'salad_mazhnuntol': ('Мажнунтол','Majnuntol','Majnuntol','Мажнунтол'),
+            'salad_aziya': ('Азия','Osiyo','Asia salad','Салати Осиё'),
+            'salad_sheikh': ('Салат Шейх','Shayx salati','Sheikh salad','Салати Шайх'),
+            'salad_smak': ('Смак','Smak salati','Smak salad','Салати Смак'),
+            'salad_baklazhan_ruletiki': ('Рулетики из баклажана','Baqlajon ruletlari','Eggplant rolls','Рулетҳои бодинҷон'),
+            'salad_hrust_baklazhan': ('Хрустящий баклажан','Qarsildoq baqlajon','Crispy eggplant','Бодинҷони қирмиз'),
+            'salad_he': ('Салат Хэ','Xe salati','He salad','Салати Хе'),
+            'salad_grecheskiy': ('Греческий','Yunon salati','Greek salad','Салати юнонӣ'),
+            'salad_ogurcy_myaso': ('Огурцы с мясом','Go‘shtli bodring','Cucumbers with meat','Бодиринг бо гӯшт'),
+            'salad_baklazhan': ('Салат Баклажан','Baqlajon salati','Eggplant salad','Салати бодинҷон'),
+            'salad_ot_shefa': ('Салат от шефа','Oshpaz salati','Chef salad','Салати шеф'),
+            'salad_russkaya_krasavitsa': ('Русская красавица','Rus go‘zali','Russian Beauty salad','Салати «Зебои рус»'),
+            'salad_brokkoli': ('Брокколи','Brokkoli','Broccoli','Брокколи'),
+            'salad_yaichnica_pod_shuboy': ('Яичница под шубой','Tuxum shuba ostida','Fried egg under a coat','Тухм зери шуба'),
+            'salad_pod_shuboy': ('Под шубой','Shuba ostida','Herring under a fur coat','Зери шуба'),
+            'salad_chirokchi': ('Чирокчи','Chiroqchi','Chiroqchi salad','Салати Чироқчӣ'),
+            'salad_myasnoy_griby': ('Мясной с грибами','Qo‘ziqorinli go‘shtli salat','Meat salad with mushrooms','Салати гӯштӣ бо занбурӯғ'),
+          }
+          for item_id, (ru,uz,en,tj) in translations.items():
+              pattern = rf"mkFood\('{re.escape(item_id)}',\{{ru:'[^']*'(?:,uz:'[^']*')?(?:,en:'[^']*')?(?:,tj:'[^']*')?\}}"
+              repl = f"mkFood('{item_id}',{{ru:'{ru}',uz:'{uz}',en:'{en}',tj:'{tj}'}}"
+              s, n = re.subn(pattern, repl, s)
+              if n != 1:
+                  print('WARN', item_id, 'matches', n)
+          p.write_text(s, encoding='utf-8')
+          PY
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html
+          git diff --cached --quiet || git commit -m "Add complete translations for all salad items"
+          git push
