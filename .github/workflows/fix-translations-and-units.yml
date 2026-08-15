@@ -1,0 +1,67 @@
+name: Fix remaining translations and localize units
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-translations-and-units.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix translations and units
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+
+          # Complete missing salad translations.
+          s=s.replace("mkFood('salad_ruletiki_baklazhan',{ru:'Рулетики из баклажана'},'',10000,'salads')",
+                      "mkFood('salad_ruletiki_baklazhan',{ru:'Рулетики из баклажана',uz:'Baqlajon ruletlari',en:'Eggplant rolls',tj:'Рулетҳои бодинҷон'},'',10000,'salads')")
+          s=s.replace("mkFood('salad_shef',{ru:'Салат от шефа'},'',18000,'salads')",
+                      "mkFood('salad_shef',{ru:'Салат от шефа',uz:'Shef salati',en:'Chef salad',tj:'Салати шеф'},'',18000,'salads')")
+          s=s.replace("mkFood('salad_yaichnitsa_shuba',{ru:'Яичница под шубой'},'',17000,'salads')",
+                      "mkFood('salad_yaichnitsa_shuba',{ru:'Яичница под шубой',uz:'Shuba ostidagi tuxum',en:'Egg under a fur coat',tj:'Тухм зери шуба'},'',17000,'salads')")
+
+          # Localize units without changing stored menu data.
+          anchor="function formatSum(x){ const n=Number(x)||0; return n.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,' '); }"
+          helper="""function formatSum(x){ const n=Number(x)||0; return n.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,' '); }
+function localizedMeta(meta, targetLang=lang){
+  let v=String(meta||'').trim();
+  if(!v) return '';
+  const map={
+    ru:{g:'гр',ml:'мл',kg:'кг',l:'л'},
+    uz:{g:'g',ml:'ml',kg:'kg',l:'l'},
+    en:{g:'g',ml:'ml',kg:'kg',l:'l'},
+    tj:{g:'г',ml:'мл',kg:'кг',l:'л'}
+  }[targetLang] || {g:'g',ml:'ml',kg:'kg',l:'l'};
+  v=v.replace(/(\\d+(?:[.,]\\d+)?)\\s*(гр|г|g)\\b/gi,(_,n)=>`${n} ${map.g}`);
+  v=v.replace(/(\\d+(?:[.,]\\d+)?)\\s*(мл|ml)\\b/gi,(_,n)=>`${n} ${map.ml}`);
+  v=v.replace(/(\\d+(?:[.,]\\d+)?)\\s*(кг|kg)\\b/gi,(_,n)=>`${n} ${map.kg}`);
+  v=v.replace(/(\\d+(?:[.,]\\d+)?)\\s*(л|l)\\b/gi,(_,n)=>`${n} ${map.l}`);
+  return v;
+}"""
+          if anchor in s and 'function localizedMeta(' not in s:
+              s=s.replace(anchor,helper)
+
+          # Use localized units everywhere visible.
+          s=s.replace("const id=it.id,qty=cart[id]||0,meta=it.meta?String(it.meta):'';", "const id=it.id,qty=cart[id]||0,meta=localizedMeta(it.meta);")
+          s=s.replace("${escapeHtml(it.meta)}", "${escapeHtml(localizedMeta(it.meta))}")
+          s=s.replace("const meta=`${UI[lang].metaPrefix}: ${it.meta||'—'}\\n${UI[lang].price}:", "const meta=`${UI[lang].metaPrefix}: ${localizedMeta(it.meta)||'—'}\\n${UI[lang].price}:")
+          s=s.replace("const one=Number(it.p||0),sum=one*qty,meta=it.meta?`<div class=\"cart-item-meta\">${escapeHtml(it.meta)}</div>`:'';", "const one=Number(it.p||0),sum=one*qty,meta=it.meta?`<div class=\"cart-item-meta\">${escapeHtml(localizedMeta(it.meta))}</div>`:'';")
+
+          # Localize unit text in generated descriptions.
+          s=s.replace("${metaText||'—'}\\n\\nДобавьте", "${localizedMeta(metaText,'ru')||'—'}\\n\\nДобавьте")
+          s=s.replace("${metaText||'—'}\\n\\nSavatga", "${localizedMeta(metaText,'uz')||'—'}\\n\\nSavatga")
+          s=s.replace("${metaText||'—'}\\n\\nAdd to", "${localizedMeta(metaText,'en')||'—'}\\n\\nAdd to")
+          s=s.replace("${metaText||'—'}\\n\\nБа сабад", "${localizedMeta(metaText,'tj')||'—'}\\n\\nБа сабад")
+
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add index.html
+          git diff --cached --quiet || git commit -m "Complete RU UZ EN TJ translations and localize units"
+          git push
